@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="initdb">检查数据库</string>
+    <string name="name">姓名</string>
+    <string name="last_name">姓氏</string>
+    <string name="phone_number">手机号码</string>
+    <string name="email_address">电子邮件地址</string>
+    <string name="notes">备注</string>
+    <string name="birthday">生日</string>
+    <string name="createcontact">创建联系人</string>
+    <string name="telephone_number">电话号码</string>
+    <string name="contactsave">联系人已保存</string>
+    <string name="avatar">头像</string>
+    <string name="missingname">至少填写一个姓名和手机号码</string>
+    <string name="app_name">联系人</string>
+    <string name="save">保存</string>
+    <string name="refresh">复制列表</string>
+    <string name="action_settings">设置</string>
+    <string name="send_message">发送短消息</string>
+    <string name="call">拨打手机</string>
+    <string name="send_email">发送电子邮件</string>
+</resources>

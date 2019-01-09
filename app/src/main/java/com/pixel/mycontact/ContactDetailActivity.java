@@ -2,6 +2,7 @@ package com.pixel.mycontact;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,15 +13,12 @@ import android.view.View;
 
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ContactDetailActivity extends AppCompatActivity {
 
-    private PeopleDB peopleDB;
     private List<DetailList> details;
     private People people;
 
@@ -29,6 +27,9 @@ public class ContactDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_detail);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        CollapsingToolbarLayout ctLayout = findViewById(R.id.toolbar_layout);
+        ctLayout.setExpandedTitleColor(getResources().getColor(R.color.colorPrimary));
+        ctLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorText));
 
         RecyclerView recyclerView = findViewById(R.id.detail_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -62,16 +63,27 @@ public class ContactDetailActivity extends AppCompatActivity {
 
     private void initList() {
         details = new ArrayList<>();
-        DetailList phone = new DetailList(getString(R.string.phone_number), R.drawable.ic_phone_black_24dp, people.getNumber1());
-        details.add(phone);
-        if (!people.getEmail().equals("")){
+        if (!people.getNumber1().equals("")) {
+            DetailList phone = new DetailList(getString(R.string.phone_number), R.drawable.ic_phone_iphone_black_24dp, people.getNumber1());
+            details.add(phone);
+        }
+        if (!people.getNumber2().equals("")) {
+            DetailList tele = new DetailList(getString(R.string.phone_number), R.drawable.ic_phone_black_24dp, people.getNumber2());
+            details.add(tele);
+        }
+        if (!people.getEmail().equals("")) {
             DetailList email = new DetailList(getString(R.string.email_address), R.drawable.ic_email_black_24dp, people.getEmail());
             details.add(email);
         }
-        if (people.getBirthMonth() != 0){
+        if (people.getBirthMonth() != 0) {
             DetailList birth = new DetailList(getString(R.string.birthday), R.drawable.ic_date_range_black_24dp, people.getBirthMonth() + "/" + people.getBirthDay());
             details.add(birth);
         }
-
+        if (!people.getNote().equals("")) {
+            DetailList note = new DetailList(getString(R.string.notes), R.drawable.ic_format_list_bulleted_black_24dp, people.getNote());
+            details.add(note);
+        }
+        DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp, Integer.toString(people.getId()));
+        details.add(id);
     }
 }

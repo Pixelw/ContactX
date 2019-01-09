@@ -59,11 +59,12 @@ public class AddUserActivity extends AppCompatActivity {
                         emailText.getText().toString(),
                         birthYear, birthMonth, birthDay,
                         noteAdd.getText().toString(),
-                        null,1039
+                        null, 1039
                 );
-                if (nameText.getText().toString().equals("") || numText.getText().toString().equals("")) {
-                    Toast.makeText(AddUserActivity.this,
-                            getString(R.string.missingname), Toast.LENGTH_SHORT).show();
+                if (nameText.getText().toString().equals("")) {
+                    if (num2Text.getText().toString().equals("") || numText.getText().toString().equals(""))
+                        Toast.makeText(AddUserActivity.this,
+                                getString(R.string.missingname), Toast.LENGTH_SHORT).show();
                 } else {
                     if (peopleDB.insertContact(people, db) > 0) {
                         Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),

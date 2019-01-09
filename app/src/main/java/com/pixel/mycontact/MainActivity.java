@@ -98,9 +98,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        refreshDB();
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+        list.clear();
+        list = peopleDB.queryAll(db, list);
+        adapter.notifyDataSetChanged();
     }
 
     private void copyList() {
