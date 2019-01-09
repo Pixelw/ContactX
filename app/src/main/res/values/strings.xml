@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">My Contact</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="initdb">Check Database</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email_address">Email Address</string>
+    <string name="notes">Notes</string>
+    <string name="birthday">Birthday</string>
+    <string name="createcontact">Create contact</string>
+    <string name="telephone_number">Telephone Number</string>
+    <string name="contactsave">Saved</string>
+    <string name="avatar">Avatar</string>
+    <string name="missingname">A name and a number at least is required</string>
+    <string name="save">Save</string>
+    <string name="futurebirth" translatable="false">You really chose a real birthday?</string>
+    <string name="refresh">Copy List</string>
+    <string name="action_settings">Settings</string>
+    <string name="send_message">Send message</string>
+    <string name="call">Call</string>
+    <string name="send_email">Send email</string>
+    <string name="title_activity_contact_detail" translatable="false">Detail</string>
+</resources>
