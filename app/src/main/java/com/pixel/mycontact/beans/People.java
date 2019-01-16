@@ -2,6 +2,10 @@ package com.pixel.mycontact.beans;
 
 import java.io.Serializable;
 
+/*
+*  people实体类，实现序列化
+*
+ */
 public class People implements Serializable {
 
     private int id;
@@ -15,11 +19,12 @@ public class People implements Serializable {
     private int birthMonth;
     private int birthDay;
     private String note;
+    private Boolean isChecked = false;
 
-    public People(String fn, String ln, String n1, String n2,String em,
-                  int by, int bm, int bd,String nt,String n,int i) {
+    public People(String fn, String ln, String n1, String n2, String em,
+                  int by, int bm, int bd, String nt, int i) {
 
-
+        String n;
         if (!fn.equals("") && !ln.equals("")) {
             if (fn.matches("^[a-zA-Z]*") ||
                     ln.matches("^[a-zA-Z]*")) {
@@ -43,6 +48,7 @@ public class People implements Serializable {
         this.birthMonth = bm;
         this.birthDay = bd;
     }
+
 
     public int getId() {
         return id;
@@ -92,6 +98,18 @@ public class People implements Serializable {
         this.number2 = number2;
     }
 
+    public String getNumber() {
+        String num;
+        if (number2.equals("")){
+            num = number1;
+        } else if (number1.equals("")){
+            num = number2;
+        }else {
+            num = "10000";
+        }
+        return num;
+    }
+
     public String getNote() {
         return note;
     }
@@ -130,5 +148,13 @@ public class People implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(Boolean checked) {
+        isChecked = checked;
     }
 }

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ContactDetailActivity">
+    tools:context=".ContactDetailActivity"
+    android:id="@+id/cdntlayout">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -37,7 +38,7 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
                 app:titleTextColor="@color/colorText"
-                app:navigationIcon="@drawable/ic_close_black_24dp" />
+                app:navigationIcon="@drawable/ic_arrow_back_black_24dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

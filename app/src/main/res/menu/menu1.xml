@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/import_contact"
+        android:title="@string/import_contact_from_system"/>
+    <item
         android:id="@+id/menu_copylist"
         android:title="@string/refresh" />
     <item
         android:id="@+id/menu_initdb"
         android:title="@string/initdb" />
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/about"/>
+
 </menu>

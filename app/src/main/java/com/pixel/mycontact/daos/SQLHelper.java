@@ -1,18 +1,15 @@
 package com.pixel.mycontact.daos;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.pixel.mycontact.beans.People;
-
 
 public class SQLHelper extends SQLiteOpenHelper {
 
-    Context mContext;
-    public SQLHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private Context mContext;
+    SQLHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.mContext = context;
     }

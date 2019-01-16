@@ -34,7 +34,7 @@
 
         <TextView
             android:id="@+id/item_d2"
-            android:layout_width="300dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:singleLine="false"/>

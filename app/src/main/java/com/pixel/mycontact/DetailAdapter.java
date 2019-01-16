@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +12,17 @@ import com.pixel.mycontact.beans.DetailList;
 
 import java.util.List;
 
+/**
+ * 生成详细信息列表
+ *
+ */
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.mViewHolder> {
     private List<DetailList> listd;
     static class mViewHolder extends RecyclerView.ViewHolder {
         ImageView hd;
         TextView d1;
         TextView d2;
-        public mViewHolder(@NonNull View itemView) {
+        mViewHolder(@NonNull View itemView) {
             super(itemView);
             hd = itemView.findViewById(R.id.item_dh);
             d1 = itemView.findViewById(R.id.item_d1);
@@ -27,13 +30,13 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.mViewHolde
         }
     }
 
-    public DetailAdapter(List<DetailList> list){
+    DetailAdapter(List<DetailList> list){
         listd = list;
     }
+    @NonNull
     public DetailAdapter.mViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_detaillist,viewGroup,false);
-        mViewHolder holder = new mViewHolder(view);
-        return holder;
+        return new mViewHolder(view);
     }
 
     @Override

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutActivity"
+    android:background="@drawable/bg">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="36sp"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/colorText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="30dp"
+        android:id="@+id/textd1"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/textd1"
+        app:layout_constraintBottom_toBottomOf="@id/textd1"
+        android:text="@string/mememe"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/colorText"/>
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="16dp"
+        android:src="@drawable/pixel"
+        android:id="@+id/pixelAvatar"
+        android:contentDescription="@string/booyah" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/pixelAvatar"
+        app:layout_constraintEnd_toStartOf="@id/pixelAvatar"
+        android:text="@string/mygmail"
+        android:id="@+id/myGmail"
+        android:layout_marginEnd="5dp"/>
+
+    <TextView
+        android:id="@+id/textInc"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:text="@string/copyright"
+        app:layout_constraintEnd_toEndOf="@id/myGmail"
+        app:layout_constraintTop_toBottomOf="@id/myGmail" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textInc"
+        app:layout_constraintEnd_toEndOf="@id/myGmail"
+        android:text="@string/ending"/>
+</android.support.constraint.ConstraintLayout>

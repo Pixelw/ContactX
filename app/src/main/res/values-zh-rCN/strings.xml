@@ -17,6 +17,19 @@
     <string name="refresh">复制列表</string>
     <string name="action_settings">设置</string>
     <string name="send_message">发送短消息</string>
-    <string name="call">拨打手机</string>
+    <string name="call">拨打电话</string>
     <string name="send_email">发送电子邮件</string>
+    <string name="perde">没有权限</string>
+    <string name="editcontact">修改联系人</string>
+    <string name="comfirm">确定</string>
+    <string name="cancelDia">取消</string>
+    <string name="deletecontact">删除联系人</string>
+    <string name="deleteQuestion">确定删除以下联系人？</string>
+    <string name="no_contact">没有联系人</string>
+    <string name="import_contact_from_system">导入系统联系人</string>
+    <string name="no_email">没有电子邮件地址</string>
+    <string name="picknumber">选择号码</string>
+    <string name="makeCall">拨打电话</string>
+    <string name="about">关于</string>
+    <string name="deleteHint">长按「铅笔」图标删除联系人</string>
 </resources>

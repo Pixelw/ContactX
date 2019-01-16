@@ -8,13 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,19 +18,20 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
 
     private List<People> mPeopleList;
 
-    public List<DetailList> getDetails() {
-        return details;
+    public List<People> getCheckedPeople() {
+        return checkedPeople;
     }
 
-    private List<DetailList> details;
+    private List<People> checkedPeople = new ArrayList<>();
 
     static class mViewHolder extends RecyclerView.ViewHolder {
+        //list 的item包含头像和姓名
         ImageView avatar;
         TextView name;
 
         View peopleView;
 
-        public mViewHolder(@NonNull View itemView) {
+        mViewHolder(@NonNull View itemView) {
             super(itemView);
             peopleView = itemView;
             avatar = itemView.findViewById(R.id.item_avatar);
@@ -42,15 +39,16 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
         }
     }
 
-    public PeopleAdapter(List<People> peopleList) {
+    PeopleAdapter(List<People> peopleList) {
         mPeopleList = peopleList;
     }
 
     @NonNull
     @Override
-    public mViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public mViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_inlist, viewGroup, false);
         final mViewHolder holder = new mViewHolder(view);
+        //设置item的点击事件，获取当前item对应people对象，并通过Intent序列化（Serialize）传入ContactDetailActivity
         holder.peopleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,26 +57,37 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
                 Intent intent = new Intent(v.getContext(), ContactDetailActivity.class);
                 intent.putExtra("people",people);
                 v.getContext().startActivity(intent);
-
-                //Toast.makeText(v.getContext(), people.getName() + " " + people.getId(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                People people = mPeopleList.get(position);
-                Toast.makeText(v.getContext(), people.getNumber1() + " " + people.getId(), Toast.LENGTH_SHORT).show();
-            }
-        });
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull mViewHolder mViewHolder, int i) {
-        People people = mPeopleList.get(i);
+    public void onBindViewHolder(@NonNull final mViewHolder mViewHolder, int i) {
+        final People people = mPeopleList.get(i);
         mViewHolder.name.setText(people.getName());
+        mViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+            /**
+             * WIP * WIP * WIP
+             * 实现点击头像改变的效果，实现CheckBox的功能
+             * 点击头像可以添加到列表，但是显示不正常
+             * “尚未完成'
+             */
+            @Override
+            public void onClick(View v) {
+                if (!people.getChecked()){
+                    mViewHolder.avatar.setImageResource(R.drawable.ic_done_black_24dp);
+                    people.setChecked(true);
+                    checkedPeople.add(people);
+                }else{
+                    mViewHolder.avatar.setImageResource(R.drawable.ic_account_circle_black_24dp);
+                    people.setChecked(false);
+                    checkedPeople.remove(people);
+                }
+                notifyDataSetChanged();
+            }
+        });
     }
 
 

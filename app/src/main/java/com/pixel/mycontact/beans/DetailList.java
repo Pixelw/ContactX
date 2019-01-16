@@ -1,4 +1,7 @@
 package com.pixel.mycontact.beans;
+/*
+ * 详细信息的列表项目实体类，包含图标，标题和信息
+ */
 
 public class DetailList {
     private String d1;
