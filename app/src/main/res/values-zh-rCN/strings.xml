@@ -32,4 +32,6 @@
     <string name="makeCall">拨打电话</string>
     <string name="about">关于</string>
     <string name="deleteHint">长按「铅笔」图标删除联系人</string>
+    <string name="share_contact">分享联系人</string>
+    <string name="scanthis">使用MyContact扫描二维码</string>
 </resources>

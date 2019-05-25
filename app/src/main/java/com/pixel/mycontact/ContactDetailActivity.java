@@ -71,7 +71,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                     ImageView imgQRCode = new ImageView(getApplicationContext());
                     imgQRCode.setImageBitmap(renderResult.getBitmap());
                     AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
-                    builder.setTitle("Scan this QRCode with MyContact")
+                    builder.setTitle(R.string.scanthis)
                             .setView(imgQRCode)
                             .show();
                 }

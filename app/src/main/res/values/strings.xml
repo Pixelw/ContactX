@@ -40,4 +40,5 @@
     <string name="booyah" translatable="false">Booyah!</string>
     <string name="ending" translatable="false">2019/1/11</string>
     <string name="share_contact">Share Contact</string>
+    <string name="scanthis">Scan this QRCode with MyContact</string>
 </resources>
