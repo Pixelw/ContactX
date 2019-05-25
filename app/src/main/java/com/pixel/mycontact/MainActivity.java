@@ -1,10 +1,14 @@
 package com.pixel.mycontact;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,6 +82,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                            ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED){
+                        requestPermissions(new String[]{Manifest.permission.CAMERA},10);
+                    }else {
+                        Intent intentQR = new Intent(MainActivity.this,QRCodeScanActivity.class);
+                        startActivity(intentQR);
+                    }
+                return false;
             }
         });
         //下拉刷新功能

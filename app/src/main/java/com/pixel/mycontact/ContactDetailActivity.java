@@ -18,10 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
+import com.github.sumimakito.awesomeqr.RenderResult;
+import com.github.sumimakito.awesomeqr.option.RenderOption;
+import com.github.sumimakito.awesomeqr.option.color.Color;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
@@ -36,6 +43,45 @@ public class ContactDetailActivity extends AppCompatActivity {
     private CoordinatorLayout cdrLay;
 
     private PeopleDB peopleDB;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_contact_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.shareContact){
+            Log.d("sharePeople", people.toString());
+            Color color = new Color();
+            color.setLight(0xFFFFFFFF);
+            color.setDark(0xff6b38fb);
+            color.setBackground(0xffffffff);
+            color.setAuto(false);
+            RenderOption renderOption = new RenderOption();
+            renderOption.setContent(people.toString());
+            renderOption.setSize(1000);
+            renderOption.setBorderWidth(20);
+            renderOption.setColor(color);
+            renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
+            try {
+                RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
+                if (renderResult.getBitmap() != null){
+                    ImageView imgQRCode = new ImageView(getApplicationContext());
+                    imgQRCode.setImageBitmap(renderResult.getBitmap());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
+                    builder.setTitle("Scan this QRCode with MyContact")
+                            .setView(imgQRCode)
+                            .show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +103,13 @@ public class ContactDetailActivity extends AppCompatActivity {
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
         //初始化详细信息列表，并设置适配器
+
         initList();
         DetailAdapter adapter = new DetailAdapter(details);
         recyclerView.setAdapter(adapter);
         //到AddUserActivity去修改联系人，extra传入序列化的people对象
         FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +140,9 @@ public class ContactDetailActivity extends AppCompatActivity {
                 return false;
             }
         });
+        if (people.getId() < 0){
+            fab.hide();
+        }
         //设置返回键
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,7 +282,10 @@ public class ContactDetailActivity extends AppCompatActivity {
             DetailList note = new DetailList(getString(R.string.notes), R.drawable.ic_format_list_bulleted_black_24dp, people.getNote());
             details.add(note);
         }
-        DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp, Integer.toString(people.getId()));
-        details.add(id);
+        if (people.getId() >= 0){
+            DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp, Integer.toString(people.getId()));
+            details.add(id);
+        }
+
     }
 }

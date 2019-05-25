@@ -71,13 +71,8 @@ public class ImportActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         sysConList = new ArrayList<>();
 
-        if (ContextCompat.checkSelfPermission
-                (ImportActivity.this, Manifest.permission.READ_CONTACTS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImportActivity.this, new String[]
-                    {
-                            Manifest.permission.READ_CONTACTS
-                    }, 1);
+        if (ContextCompat.checkSelfPermission(ImportActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ImportActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
         } else {
             readAllSystemContacts();
         }
@@ -115,7 +110,7 @@ public class ImportActivity extends AppCompatActivity {
                     String number = cursor.getString(cursor.getColumnIndex
                             (ContactsContract.CommonDataKinds.Phone.NUMBER));
                     People people = new People(name, "", number, "", "",
-                            0, 0, 0, "Imported", 1139);
+                            0, 0, 0, "Imported", -139);
                     sysConList.add(people);
                 }
             }

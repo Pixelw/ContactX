@@ -9,31 +9,31 @@ import com.pixel.mycontact.beans.People;
 
 import java.util.List;
 
-            public class PeopleDB {
+public class PeopleDB {
 
-                private SQLiteDatabase db;
+    private SQLiteDatabase db;
 
-                public PeopleDB(Context context) {
-                    SQLHelper dbHelper = new SQLHelper(context, "Contacts.db", null, 1);
-                    db = dbHelper.getWritableDatabase();
-                }
+    public PeopleDB(Context context) {
+        SQLHelper dbHelper = new SQLHelper(context, "Contacts.db", null, 1);
+        db = dbHelper.getWritableDatabase();
+    }
 
-                //导入系统联系人
-                public long insertSysContacts(List<People> list) {
-                    long d = 0;
-                    for (int p = 0; p < list.size(); p++) {
-                        People people = list.get(p);
-                        ContentValues values = new ContentValues();
-                        values.put("name", people.getName());
-                        values.put("firstname", people.getFirstName());
-                        values.put("lastname", people.getLastName());
-                        values.put("number1", people.getNumber1());
-                        values.put("number2", people.getNumber2());
-                        values.put("email", people.getEmail());
-                        values.put("birthYear", people.getBirthYear());
-                        values.put("birthmonth", people.getBirthMonth());
-                        values.put("birthDay", people.getBirthDay());
-                        values.put("note", people.getNote());
+    //导入系统联系人
+    public long insertSysContacts(List<People> list) {
+        long d = 0;
+        for (int p = 0; p < list.size(); p++) {
+            People people = list.get(p);
+            ContentValues values = new ContentValues();
+            values.put("name", people.getName());
+            values.put("firstname", people.getFirstName());
+            values.put("lastname", people.getLastName());
+            values.put("number1", people.getNumber1());
+            values.put("number2", people.getNumber2());
+            values.put("email", people.getEmail());
+            values.put("birthYear", people.getBirthYear());
+            values.put("birthmonth", people.getBirthMonth());
+            values.put("birthDay", people.getBirthDay());
+            values.put("note", people.getNote());
             d += db.insert("Contacts", null, values);
         }
         return d;
@@ -56,6 +56,7 @@ import java.util.List;
         r = db.insert("Contacts", null, values);
         return r;
     }
+
     //查询所有联系人
     public List<People> queryAll(List<People> peopleList) {
         Cursor cursor = db.query("Contacts", null, null, null,
@@ -92,6 +93,7 @@ import java.util.List;
         cursor.close();
         return peopleList;
     }
+
     //修改更新联系人
     public long updateContact(People people) {
         ContentValues values = new ContentValues();
@@ -109,7 +111,8 @@ import java.util.List;
         r = db.update("Contacts", values, "id=?", new String[]{people.getId() + ""});
         return r;
     }
-//删除联系人
+
+    //删除联系人
     public long deleteContact(int id) {
         return db.delete("Contacts", "id=?", new String[]{id + ""});
     }

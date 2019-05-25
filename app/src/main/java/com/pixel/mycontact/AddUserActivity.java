@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,49 +50,46 @@ public class AddUserActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = 1039;//id 缺省值，不写入数据库
+        int id = -39;//id 缺省值，不写入数据库
         //判断是否为修改模式，是修改模式的话id沿用数据库的id，方便数据库识别；
         if (isModify) {
             id = people.getId();
         }
-        switch (item.getItemId()) {
-            case R.id.accept:
-                People savpeople = new People(
-                        nameText.getText().toString(),
-                        lastNameText.getText().toString(),
-                        numText.getText().toString(),
-                        num2Text.getText().toString(),
-                        emailText.getText().toString(),
-                        birthYear, birthMonth, birthDay,
-                        noteAdd.getText().toString(),
-                        id
-                );
-                if (nameText.getText().toString().equals("")) {//判断至少填写一个电话一个姓名
-                    if (num2Text.getText().toString().equals("") || numText.getText().toString().equals(""))
-                        Toast.makeText(AddUserActivity.this,
-                                getString(R.string.missingname), Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.accept) {
+            People savpeople = new People(
+                    nameText.getText().toString(),
+                    lastNameText.getText().toString(),
+                    numText.getText().toString(),
+                    num2Text.getText().toString(),
+                    emailText.getText().toString(),
+                    birthYear, birthMonth, birthDay,
+                    noteAdd.getText().toString(),
+                    id
+            );
+            Log.d("peopleToString", savpeople.toString());
+            if (nameText.getText().toString().equals("")) {//判断至少填写一个电话一个姓名
+                if (num2Text.getText().toString().equals("") || numText.getText().toString().equals(""))
+                    Toast.makeText(AddUserActivity.this,
+                            getString(R.string.missingname), Toast.LENGTH_SHORT).show();
 
-                } else {
-                    if (isModify) {//修改模式，调用update方法
+            } else {
+                if (isModify) {//修改模式，调用update方法
 
-                        if (peopleDB.updateContact(savpeople) > 0) {
-                            Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-
-                    } else {//创建模式，调用insert方法；
-                        if (peopleDB.insertContact(savpeople) > 0) {
-                            Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
+                    if (peopleDB.updateContact(savpeople) > 0) {
+                        Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
+                                Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
+                } else {//创建模式，调用insert方法；
+                    if (peopleDB.insertContact(savpeople) > 0) {
+                        Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
+                                Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
-                break;
-            default:
+
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,10 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.pixel.mycontact.ContactDetailActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/shareContact"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/share_contact"
+        app:showAsAction="always" />
 </menu>

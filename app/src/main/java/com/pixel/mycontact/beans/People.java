@@ -3,151 +3,155 @@ package com.pixel.mycontact.beans;
 import java.io.Serializable;
 
 /*
-*  people实体类，实现序列化
-*
+ *  people实体类，实现序列化
+ *
  */
 public class People implements Serializable {
 
-    private int id;
-    private String name;
-    private String firstName;
-    private String lastName;
-    private String number1;
-    private String number2;
-    private String email;
-    private int birthYear;
-    private int birthMonth;
-    private int birthDay;
-    private String note;
+    private int i;
+    private String n;
+    private String f;
+    private String l;
+    private String n1;
+    private String n2;
+    private String e;
+    private int y;
+    private int m;
+    private int d;
+    private String no;
     private Boolean isChecked = false;
 
-    public People(String fn, String ln, String n1, String n2, String em,
-                  int by, int bm, int bd, String nt, int i) {
+    public People(String firstName, String lastName, String number1, String number2, String email,
+                  int birthYear, int birthMonth, int birthDay, String note, int id) {
 
-        String n;
-        if (!fn.equals("") && !ln.equals("")) {
-            if (fn.matches("^[a-zA-Z]*") ||
-                    ln.matches("^[a-zA-Z]*")) {
-                n = fn + " " + ln;
+        String name;
+        if (!firstName.equals("") && !lastName.equals("")) {
+            if (firstName.matches("^[a-zA-Z]*") ||
+                    lastName.matches("^[a-zA-Z]*")) {
+                name = firstName + " " + lastName;
             } else {
-                n = ln + " " + fn;
+                name = lastName + " " + firstName;
             }
-        }else{
-            n = fn;
+        } else {
+            name = firstName;
         }
 
-        this.id = i;
-        this.name = n;
-        this.firstName = fn;
-        this.lastName = ln;
-        this.number1 = n1;
-        this.number2 = n2;
-        this.email = em;
-        this.note = nt;
-        this.birthYear = by;
-        this.birthMonth = bm;
-        this.birthDay = bd;
+        this.i = id;
+        this.n = name;
+        this.f = firstName;
+        this.l = lastName;
+        this.n1 = number1;
+        this.n2 = number2;
+        this.e = email;
+        this.no = note;
+        this.y = birthYear;
+        this.m = birthMonth;
+        this.d = birthDay;
     }
 
 
     public int getId() {
-        return id;
+        return i;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.i = id;
     }
 
     public String getName() {
-        return name;
+        return n;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.n = name;
     }
 
     public String getFirstName() {
-        return firstName;
+        return f;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.f = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return l;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.l = lastName;
     }
 
     public String getNumber1() {
-        return number1;
+        return n1;
     }
 
     public void setNumber1(String number1) {
-        this.number1 = number1;
+        this.n1 = number1;
     }
 
     public String getNumber2() {
-        return number2;
+        return n2;
     }
 
     public void setNumber2(String number2) {
-        this.number2 = number2;
+        this.n2 = number2;
     }
 
     public String getNumber() {
-        String num;
-        if (number2.equals("")){
-            num = number1;
-        } else if (number1.equals("")){
-            num = number2;
+//   返回一个号码，有两个优先返回1，没有返回"unknown"
+        if (!n1.equals("")){
+            return n1;
+        }else if (!n2.equals("")){
+            return n2;
         }else {
-            num = "10000";
+            return "unknown";
         }
-        return num;
+
     }
 
     public String getNote() {
-        return note;
+        return no;
     }
 
     public void setNote(String note) {
-        this.note = note;
+        this.no = note;
+    }
+
+    public void appendNote(String text) {
+        no = no + "\n" + text;
     }
 
     public int getBirthYear() {
-        return birthYear;
+        return y;
     }
 
     public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
+        this.y = birthYear;
     }
 
     public int getBirthMonth() {
-        return birthMonth;
+        return m;
     }
 
     public void setBirthMonth(int birthMonth) {
-        this.birthMonth = birthMonth;
+        this.m = birthMonth;
     }
 
     public int getBirthDay() {
-        return birthDay;
+        return d;
     }
 
     public void setBirthDay(int birthDay) {
-        this.birthDay = birthDay;
+        this.d = birthDay;
     }
 
     public String getEmail() {
-        return email;
+        return e;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.e = email;
     }
 
     public Boolean getChecked() {
@@ -156,5 +160,31 @@ public class People implements Serializable {
 
     public void setChecked(Boolean checked) {
         isChecked = checked;
+    }
+
+    @Override
+    public String toString() {
+        return "{"+ "\"i\":"
+                + i
+                + ",\"n\":\""
+                + n + '\"'
+                + ",\"f\":\""
+                + f + '\"'
+                + ",\"l\":\""
+                + l + '\"'
+                + ",\"n1\":\""
+                + n1 + '\"'
+                + ",\"n2\":\""
+                + n2 + '\"'
+                + ",\"e\":\""
+                + e + '\"'
+                + ",\"y\":"
+                + y
+                + ",\"m\":"
+                + m
+                + ",\"d\":"
+                + d
+                + ",\"no\":\""
+                + no + "\"}";
     }
 }
