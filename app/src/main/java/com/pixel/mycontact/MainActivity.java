@@ -1,8 +1,10 @@
 package com.pixel.mycontact;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,14 +12,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
@@ -120,6 +125,48 @@ public class MainActivity extends AppCompatActivity {
         list = peopleDB.queryAll(list);
         adapter = new PeopleAdapter(list);
         recyclerView.setAdapter(adapter);
+//URL启动的方式
+        urlIntentResolve();
+    }
+
+    private void urlIntentResolve() {
+        Intent urlIntent = getIntent();
+        if (urlIntent != null){
+            String intentAction = urlIntent.getAction();
+
+            if (Intent.ACTION_VIEW.equals(intentAction)){
+                Uri intentData = urlIntent.getData();
+                String json;
+                if (intentData != null) {
+                    Log.d("uri", intentData.toString());
+                    json = intentData.getQueryParameter("json");
+                    final People peopleFromUrl = PeopleResolver.resolveJson(json);
+                    if (peopleFromUrl !=null){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle(R.string.foundcontact)
+                                .setMessage(getString(R.string.addthis) + "\n" + peopleFromUrl.getName())
+                                .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        peopleDB = new PeopleDB(MainActivity.this);
+                                        if (peopleDB.insertContact(peopleFromUrl) > 0) {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancelDia, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .show();
+                    }
+                }
+
+            }
+        }
     }
 
     @Override

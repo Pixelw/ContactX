@@ -1,5 +1,7 @@
 package com.pixel.mycontact.beans;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /*
@@ -39,11 +41,12 @@ public class People implements Serializable {
         this.i = id;
         this.n = name;
         this.f = firstName;
-        this.l = lastName;
-        this.n1 = number1;
-        this.n2 = number2;
-        this.e = email;
-        this.no = note;
+        //set strings to "" rather than null
+        this.l = lastName == null ? "" : lastName;
+        this.n1 = number1 == null ? "" : number1;
+        this.n2 = number2 == null ? "" : number2;
+        this.e = email == null ? "" : email;
+        this.no = note == null ? "" : note;
         this.y = birthYear;
         this.m = birthMonth;
         this.d = birthDay;
@@ -54,57 +57,33 @@ public class People implements Serializable {
         return i;
     }
 
-    public void setId(int id) {
-        this.i = id;
-    }
-
     public String getName() {
         return n;
-    }
-
-    public void setName(String name) {
-        this.n = name;
     }
 
     public String getFirstName() {
         return f;
     }
 
-    public void setFirstName(String firstName) {
-        this.f = firstName;
-    }
-
     public String getLastName() {
         return l;
-    }
-
-    public void setLastName(String lastName) {
-        this.l = lastName;
     }
 
     public String getNumber1() {
         return n1;
     }
 
-    public void setNumber1(String number1) {
-        this.n1 = number1;
-    }
-
     public String getNumber2() {
         return n2;
     }
 
-    public void setNumber2(String number2) {
-        this.n2 = number2;
-    }
-
     public String getNumber() {
 //   返回一个号码，有两个优先返回1，没有返回"unknown"
-        if (!n1.equals("")){
+        if (!n1.equals("")) {
             return n1;
-        }else if (!n2.equals("")){
+        } else if (!n2.equals("")) {
             return n2;
-        }else {
+        } else {
             return "unknown";
         }
 
@@ -112,10 +91,6 @@ public class People implements Serializable {
 
     public String getNote() {
         return no;
-    }
-
-    public void setNote(String note) {
-        this.no = note;
     }
 
     public void appendNote(String text) {
@@ -126,32 +101,16 @@ public class People implements Serializable {
         return y;
     }
 
-    public void setBirthYear(int birthYear) {
-        this.y = birthYear;
-    }
-
     public int getBirthMonth() {
         return m;
-    }
-
-    public void setBirthMonth(int birthMonth) {
-        this.m = birthMonth;
     }
 
     public int getBirthDay() {
         return d;
     }
 
-    public void setBirthDay(int birthDay) {
-        this.d = birthDay;
-    }
-
     public String getEmail() {
         return e;
-    }
-
-    public void setEmail(String email) {
-        this.e = email;
     }
 
     public Boolean getChecked() {
@@ -162,29 +121,31 @@ public class People implements Serializable {
         isChecked = checked;
     }
 
-    @Override
-    public String toString() {
-        return "{"+ "\"i\":"
-                + i
-                + ",\"n\":\""
-                + n + '\"'
-                + ",\"f\":\""
-                + f + '\"'
-                + ",\"l\":\""
-                + l + '\"'
-                + ",\"n1\":\""
-                + n1 + '\"'
-                + ",\"n2\":\""
-                + n2 + '\"'
-                + ",\"e\":\""
-                + e + '\"'
-                + ",\"y\":"
-                + y
-                + ",\"m\":"
-                + m
-                + ",\"d\":"
-                + d
-                + ",\"no\":\""
-                + no + "\"}";
+    public String toJSON() {
+        String adaptiveJson = "[{"
+                + "\"f\":\"" + f + '\"';
+        if (l.length() > 0) {
+            adaptiveJson += ",\"l\":\"" + l + '\"';
+        }
+        if (n1.length() > 0) {
+            adaptiveJson += ",\"n1\":\"" + n1 + '\"';
+        }
+        if (n2.length() > 0) {
+            adaptiveJson += ",\"n2\":\"" + n2 + '\"';
+        }
+        if (e.length() > 0) {
+            adaptiveJson += ",\"e\":\"" + e + '\"';
+        }
+        if (y != 0 || m != 0 || d != 0) {
+            adaptiveJson += ",\"y\":" + y + ",\"m\":" + m
+                    + ",\"d\":" + d;
+        }
+        if (no.length() > 0) {
+            adaptiveJson += ",\"no\":\"" + no + '\"';
+        }
+
+        adaptiveJson += "}]";
+
+        return adaptiveJson;
     }
 }

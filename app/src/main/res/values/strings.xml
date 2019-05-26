@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Contact</string>
+    <string name="app_name" translatable="false">ContactX</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="initdb">Check Database</string>
     <string name="name">Name</string>
@@ -40,5 +40,12 @@
     <string name="booyah" translatable="false">Booyah!</string>
     <string name="ending" translatable="false">2019/1/11</string>
     <string name="share_contact">Share Contact</string>
-    <string name="scanthis">Scan this QRCode with MyContact</string>
+    <string name="scanthis">Scan this QRCode with ContactX</string>
+    <string name="foundcontact">Found contact in this QRCode</string>
+    <string name="addthis">Add this contact?</string>
+    <string name="add">Add</string>
+    <string name="invalidqr">Invalid QRCode</string>
+    <string name="not_supported_qr">This QRCode is not supported. Only the QRCode generate by ContactX is supported.</string>
+    <string name="ok">OK</string>
+    <string name="done">Done</string>
 </resources>

@@ -53,14 +53,14 @@ public class ContactDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.shareContact){
-            Log.d("sharePeople", people.toString());
+            Log.d("sharePeople", people.toJSON());
             Color color = new Color();
             color.setLight(0xFFFFFFFF);
             color.setDark(0xff6b38fb);
             color.setBackground(0xffffffff);
             color.setAuto(false);
             RenderOption renderOption = new RenderOption();
-            renderOption.setContent(people.toString());
+            renderOption.setContent("pixel://mct?json="+people.toJSON());
             renderOption.setSize(1000);
             renderOption.setBorderWidth(20);
             renderOption.setColor(color);
@@ -73,6 +73,12 @@ public class ContactDetailActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
                     builder.setTitle(R.string.scanthis)
                             .setView(imgQRCode)
+                            .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
                             .show();
                 }
             } catch (Exception e) {
@@ -178,7 +184,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 } else {
                     Intent intent1 = new Intent(Intent.ACTION_SENDTO);
                     intent1.setData(Uri.parse("mailto:" + people.getEmail()));
-                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from My Contact");
+                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from "+R.string.app_name);
                     startActivity(intent1);
                 }
 
@@ -247,16 +253,13 @@ public class ContactDetailActivity extends AppCompatActivity {
     //权限请求回调
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    callPeople();
-                } else {
-                    Snackbar.make(cdrLay, R.string.perde, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-                break;
-            default:
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                callPeople();
+            } else {
+                Snackbar.make(cdrLay, R.string.perde, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         }
     }
     //生成详细信息的列表

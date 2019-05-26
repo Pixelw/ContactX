@@ -12,7 +12,6 @@
     <string name="contactsave">联系人已保存</string>
     <string name="avatar">头像</string>
     <string name="missingname">至少填写一个姓名和手机号码</string>
-    <string name="app_name">联系人</string>
     <string name="save">保存</string>
     <string name="refresh">复制列表</string>
     <string name="action_settings">设置</string>
@@ -33,5 +32,12 @@
     <string name="about">关于</string>
     <string name="deleteHint">长按「铅笔」图标删除联系人</string>
     <string name="share_contact">分享联系人</string>
-    <string name="scanthis">使用MyContact扫描二维码</string>
+    <string name="scanthis">使用 ContactX 扫描二维码</string>
+    <string name="add">添加</string>
+    <string name="addthis">添加到联系人？</string>
+    <string name="foundcontact">已从二维码中找到联系人</string>
+    <string name="not_supported_qr">不支持这个二维码,只支持由 ContactX 生成的二维码。</string>
+    <string name="ok">好</string>
+    <string name="invalidqr">无效二维码</string>
+    <string name="done">完成</string>
 </resources>

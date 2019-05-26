@@ -42,13 +42,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_playlist_add_black_24dp" />
-    <EditText
-        android:id="@+id/sss"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:autofillHints="yes"
-        android:inputType="text" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -66,7 +66,7 @@ public class AddUserActivity extends AppCompatActivity {
                     noteAdd.getText().toString(),
                     id
             );
-            Log.d("peopleToString", savpeople.toString());
+            Log.d("peopleToString", savpeople.toJSON());
             if (nameText.getText().toString().equals("")) {//判断至少填写一个电话一个姓名
                 if (num2Text.getText().toString().equals("") || numText.getText().toString().equals(""))
                     Toast.makeText(AddUserActivity.this,
