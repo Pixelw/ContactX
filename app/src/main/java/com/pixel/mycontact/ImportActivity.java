@@ -38,15 +38,11 @@ public class ImportActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.accept:
-                if (peopleDB.insertSysContacts(adapter.getCheckedPeople()) > 0) {
-                    Toast.makeText(ImportActivity.this, "Imported", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.accept) {
+            if (peopleDB.insertSysContacts(adapter.getCheckedPeople()) > 0) {
+                Toast.makeText(ImportActivity.this, "Imported", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -85,16 +81,13 @@ public class ImportActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         LinearLayout layout = findViewById(R.id.importList);
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    readAllSystemContacts();
-                } else {
-                    Snackbar.make(layout, R.string.perde, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-                break;
-            default:
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                readAllSystemContacts();
+            } else {
+                Snackbar.make(layout, R.string.perde, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         }
     }
 

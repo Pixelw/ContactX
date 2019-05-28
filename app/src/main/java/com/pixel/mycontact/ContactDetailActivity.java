@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +30,9 @@ import android.widget.LinearLayout;
 import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
 import com.github.sumimakito.awesomeqr.RenderResult;
 import com.github.sumimakito.awesomeqr.option.RenderOption;
+import com.github.sumimakito.awesomeqr.option.background.BlendBackground;
 import com.github.sumimakito.awesomeqr.option.color.Color;
+import com.github.sumimakito.awesomeqr.option.logo.Logo;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
@@ -52,41 +56,68 @@ public class ContactDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.shareContact){
+        if (item.getItemId() == R.id.shareContact) {
             Log.d("sharePeople", people.toJSON());
-            Color color = new Color();
-            color.setLight(0xFFFFFFFF);
-            color.setDark(0xff6b38fb);
-            color.setBackground(0xffffffff);
-            color.setAuto(false);
-            RenderOption renderOption = new RenderOption();
-            renderOption.setContent("pixel://mct?json="+people.toJSON());
-            renderOption.setSize(1000);
-            renderOption.setBorderWidth(20);
-            renderOption.setColor(color);
-            renderOption.setClearBorder(true); // if set to true, the background will NOT be drawn on the border area
-            try {
-                RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
-                if (renderResult.getBitmap() != null){
-                    ImageView imgQRCode = new ImageView(getApplicationContext());
-                    imgQRCode.setImageBitmap(renderResult.getBitmap());
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
-                    builder.setTitle(R.string.scanthis)
-                            .setView(imgQRCode)
-                            .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            })
-                            .show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            generateQR();
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void generateQR() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.de1k)
+                .copy(Bitmap.Config.ARGB_8888, true);
+
+
+        BlendBackground background = new BlendBackground();
+        background.setBitmap(bitmap);
+//        background.setClippingRect(new Rect(0, 0, 1000, 1000));
+        background.setAlpha(0.7f);
+        background.setBorderRadius(10);
+
+        Color color = new Color();
+//        color.setLight(0xFFFFFFFF);
+//        color.setDark(0xff6b38fb);
+        color.setAuto(true);
+
+        Logo logo = new Logo();
+        Bitmap bitmap1 = BitmapFactory.decodeResource
+                (getResources(),R.drawable.pixel)
+                .copy(Bitmap.Config.ARGB_8888, true);
+        logo.setBitmap(bitmap1);
+        logo.setBorderRadius(10); // radius for logo's corners
+        logo.setBorderWidth(10); // width of the border to be added around the logo
+        logo.setScale(0.3f); // scale for the logo in the QR code
+//        logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
+
+        RenderOption renderOption = new RenderOption();
+        renderOption.setContent(PeopleResolver.urlHeader + PeopleResolver.jsonQueryPara + people.toJSON());
+        renderOption.setSize(800);
+        renderOption.setBorderWidth(20);
+        renderOption.setColor(color);
+        renderOption.setBackground(background);
+        renderOption.setClearBorder(true);
+        renderOption.setLogo(logo);
+
+        try {
+            RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
+            if (renderResult.getBitmap() != null) {
+                ImageView imgQRCode = new ImageView(getApplicationContext());
+                imgQRCode.setImageBitmap(renderResult.getBitmap());
+                AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
+                builder.setTitle(R.string.scanthis)
+                        .setView(imgQRCode)
+                        .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -146,7 +177,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 return false;
             }
         });
-        if (people.getId() < 0){
+        if (people.getId() < 0) {
             fab.hide();
         }
         //设置返回键
@@ -184,7 +215,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 } else {
                     Intent intent1 = new Intent(Intent.ACTION_SENDTO);
                     intent1.setData(Uri.parse("mailto:" + people.getEmail()));
-                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from "+R.string.app_name);
+                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
                     startActivity(intent1);
                 }
 
@@ -262,6 +293,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             }
         }
     }
+
     //生成详细信息的列表
     private void initList() {
         details = new ArrayList<>();
@@ -285,7 +317,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             DetailList note = new DetailList(getString(R.string.notes), R.drawable.ic_format_list_bulleted_black_24dp, people.getNote());
             details.add(note);
         }
-        if (people.getId() >= 0){
+        if (people.getId() >= 0) {
             DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp, Integer.toString(people.getId()));
             details.add(id);
         }

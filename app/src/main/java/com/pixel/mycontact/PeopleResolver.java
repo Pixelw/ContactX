@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class PeopleResolver {
+    public static String urlHeader = "pixel://mct?";
+    public static String jsonQueryPara = "json=";
     static People resolveJson(String json) {
         People peopleFromJson;
         JSONObject j = null;
