@@ -68,6 +68,12 @@ public class QRCodeScanActivity extends AppCompatActivity {
                                 scannerView.resumeCameraPreview(resultHandler);
                             }
                         })
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                scannerView.resumeCameraPreview(resultHandler);
+                            }
+                        })
                         .show();
 
             }

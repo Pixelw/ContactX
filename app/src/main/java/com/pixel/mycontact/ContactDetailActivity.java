@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -65,20 +66,20 @@ public class ContactDetailActivity extends AppCompatActivity {
     }
 
     private void generateQR() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.de1k)
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.flat)
                 .copy(Bitmap.Config.ARGB_8888, true);
 
 
         BlendBackground background = new BlendBackground();
         background.setBitmap(bitmap);
-//        background.setClippingRect(new Rect(0, 0, 1000, 1000));
-        background.setAlpha(0.7f);
+//        background.setClippingRect(new Rect(100, 100, 1400, 1400));
+        background.setAlpha(1.0f);
         background.setBorderRadius(10);
 
         Color color = new Color();
-//        color.setLight(0xFFFFFFFF);
-//        color.setDark(0xff6b38fb);
-        color.setAuto(true);
+        color.setLight(0xfff4f7f3);
+        color.setDark(0xff2e403a);
+        color.setAuto(false);
 
         Logo logo = new Logo();
         Bitmap bitmap1 = BitmapFactory.decodeResource
@@ -87,16 +88,18 @@ public class ContactDetailActivity extends AppCompatActivity {
         logo.setBitmap(bitmap1);
         logo.setBorderRadius(10); // radius for logo's corners
         logo.setBorderWidth(10); // width of the border to be added around the logo
-        logo.setScale(0.3f); // scale for the logo in the QR code
+        logo.setScale(0.2f); // scale for the logo in the QR code
 //        logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
 
         RenderOption renderOption = new RenderOption();
         renderOption.setContent(PeopleResolver.urlHeader + PeopleResolver.jsonQueryPara + people.toJSON());
         renderOption.setSize(800);
         renderOption.setBorderWidth(20);
+        renderOption.setRoundedPatterns(true);
+        renderOption.setPatternScale(0.5f);
         renderOption.setColor(color);
         renderOption.setBackground(background);
-        renderOption.setClearBorder(true);
+        renderOption.setClearBorder(false);
         renderOption.setLogo(logo);
 
         try {
