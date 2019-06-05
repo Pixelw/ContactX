@@ -7,16 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +14,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 
@@ -49,25 +50,29 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu1, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     //给菜单设置点击事件
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_initdb:
-                if (peopleDB.checkdb()){
-                    Snackbar.make(cdntlayout,"DB is ready",Snackbar.LENGTH_SHORT).show();
+                if (peopleDB.checkdb()) {
+                    Snackbar.make(cdntlayout, "DB is ready", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.menu_copylist:
                 copyList();
                 break;
             case R.id.import_contact:
-                Intent intent =  new Intent(MainActivity.this, ImportActivity.class);
+                Intent intent = new Intent(MainActivity.this, ImportActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_about:
-                Intent intenta = new Intent(MainActivity.this,AboutActivity.class);
+                Intent intenta = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intenta);
+            case R.id.menu_settings:
+                Intent intentset = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentset);
             default:
                 break;
         }
@@ -80,9 +85,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionMenu fabMenu = findViewById(R.id.fab_menu);
+        fabMenu.setClosedOnTouchOutside(true);
+        com.github.clans.fab.FloatingActionButton fabNew = findViewById(R.id.fab_new);
+        com.github.clans.fab.FloatingActionButton fabScan = findViewById(R.id.fab_scan);
         //创建联系人入口（悬浮按钮）
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
@@ -90,20 +98,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
+        fabScan.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-                            ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
-                                    != PackageManager.PERMISSION_GRANTED){
-                        requestPermissions(new String[]{Manifest.permission.CAMERA},10);
-                    }else {
-                        Intent intentQR = new Intent(MainActivity.this,QRCodeScanActivity.class);
-                        startActivity(intentQR);
-                    }
-                return false;
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                        ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 10);
+                } else {
+                    Intent intentQR = new Intent(MainActivity.this, QRCodeScanActivity.class);
+                    startActivity(intentQR);
+                }
             }
         });
+
+
+
         //下拉刷新功能
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -131,25 +141,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void urlIntentResolve() {
         Intent urlIntent = getIntent();
-        if (urlIntent != null){
+        if (urlIntent != null) {
             String intentAction = urlIntent.getAction();
 
-            if (Intent.ACTION_VIEW.equals(intentAction)){
+            if (Intent.ACTION_VIEW.equals(intentAction)) {
                 Uri intentData = urlIntent.getData();
-                String json;
+                String qrdata;
+                People peopleFromUrl = null;
                 if (intentData != null) {
                     Log.d("uri", intentData.toString());
-                    json = intentData.getQueryParameter("json");
-                    final People peopleFromUrl = PeopleResolver.resolveJson(json);
-                    if (peopleFromUrl !=null){
+                    if (intentData.toString().startsWith("pixel://mct?json")) {
+                        qrdata = intentData.getQueryParameter("json");
+                        peopleFromUrl = PeopleResolver.resolveJson(qrdata);
+                    } else if (intentData.toString().startsWith("pixel://mct?b64")) {
+                        qrdata = intentData.getQueryParameter("b64");
+                        peopleFromUrl = PeopleResolver.resolveBase64Json(qrdata);
+                    }
+
+
+                    if (peopleFromUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        final People finalPeopleFromUrl = peopleFromUrl;
                         builder.setTitle(R.string.foundcontact)
                                 .setMessage(getString(R.string.addthis) + "\n" + peopleFromUrl.getName())
                                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         peopleDB = new PeopleDB(MainActivity.this);
-                                        if (peopleDB.insertContact(peopleFromUrl) > 0) {
+                                        if (peopleDB.insertContact(finalPeopleFromUrl) > 0) {
                                             Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
                                             finish();
                                         }
@@ -163,8 +182,9 @@ public class MainActivity extends AppCompatActivity {
                                 })
                                 .show();
                     }
+                } else {
+                    Snackbar.make(cdntlayout, getString(R.string.invalidqr), Snackbar.LENGTH_LONG).show();
                 }
-
             }
         }
     }
@@ -173,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         //活动继续运行时，检查列表长度，若为空显示“无联系人”
         super.onResume();
-        if (list.size() == 0){
+        if (list.size() == 0) {
             noContact.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             noContact.setVisibility(View.INVISIBLE);
         }
     }

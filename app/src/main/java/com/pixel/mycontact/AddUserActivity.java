@@ -4,18 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixel.mycontact.beans.People;
@@ -70,14 +68,18 @@ public class AddUserActivity extends AppCompatActivity {
                     id
             );
             Log.d("peopleToString", savpeople.toJSON());
+
+            String emailInput = emailText.getEditText().getText().toString();
             if (nameText.getEditText().getText().toString().equals("")) {//判断至少填写一个电话一个姓名
                 nameText.setErrorEnabled(true);
                 nameText.setError(getString(R.string.missingname));
             }else if (numText.getEditText().getText().toString().equals("")
-                    && num2Text.getEditText().getText().toString().equals("")){
-
+                    && num2Text.getEditText().getText().toString().equals("")) {
                 numText.setErrorEnabled(true);
                 numText.setError(getString(R.string.missingNumber));
+            }else if (!emailInput.equals("") && !emailInput.contains("@")){
+                emailText.setErrorEnabled(true);
+                emailText.setError(getString(R.string.invalid_email));
             } else {
                 if (isModify) {//修改模式，调用update方法
 

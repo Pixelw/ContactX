@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/AppBarAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -71,7 +70,8 @@
                             android:layout_height="match_parent"
                             android:imeOptions="actionNext"
                             android:nextFocusForward="@id/lastNameAdd"
-                            android:singleLine="true"/>
+                            android:singleLine="true"
+                            android:maxLength="48"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
@@ -92,7 +92,8 @@
                             android:layout_height="match_parent"
                             android:imeOptions="actionNext"
                             android:nextFocusForward="@id/numAdd"
-                            android:singleLine="true"/>
+                            android:singleLine="true"
+                            android:maxLength="48"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -131,7 +132,8 @@
                             android:imeOptions="actionNext"
                             android:inputType="phone"
                             android:nextFocusForward="@id/num2Add"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:maxLength="24"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -154,7 +156,8 @@
                             android:imeOptions="actionNext"
                             android:inputType="phone"
                             android:nextFocusForward="@id/emailAdd"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:maxLength="24"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
@@ -175,7 +178,8 @@
                             android:layout_height="match_parent"
                             android:imeOptions="actionNext"
                             android:nextFocusForward="@id/noteAdd"
-                            android:singleLine="true"/>
+                            android:singleLine="true"
+                            android:maxLength="48"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
@@ -225,12 +229,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_columnSpan="7"
-                        android:hint="@string/notes"
-                        >
+                        android:hint="@string/notes">
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:lines="3"/>
+                            android:lines="3"
+                            android:maxLength="384"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
             </com.google.android.material.card.MaterialCardView>

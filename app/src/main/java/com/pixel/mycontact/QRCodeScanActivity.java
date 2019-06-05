@@ -2,11 +2,13 @@ package com.pixel.mycontact;
 
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.pixel.mycontact.beans.People;
@@ -55,8 +57,6 @@ public class QRCodeScanActivity extends AppCompatActivity {
 
     private void handleUrl() {
         if (peopleFromQR != null) {
-
-            Log.d("scanResult", peopleFromQR.toJSON());
             AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScanActivity.this);
             builder.setTitle(R.string.foundcontact)
                     .setMessage(getString(R.string.addthis) + "\n" + peopleFromQR.getName())
@@ -95,6 +95,15 @@ public class QRCodeScanActivity extends AppCompatActivity {
         scannerView = findViewById(R.id.scannerView);
         scannerView.setResultHandler(resultHandler);
 
+        Toolbar toolbar =findViewById(R.id.toolbarScan);
+        toolbar.setTitle(getString(R.string.scan_qr));
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

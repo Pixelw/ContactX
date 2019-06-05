@@ -6,8 +6,8 @@ android {
         applicationId "com.pixel.mycontact"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 102
+        versionName "1.2_release"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,6 +28,7 @@ dependencies {
     implementation 'com.github.SumiMakito:AwesomeQRCode:1.2.0'
 //    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'androidx.preference:preference:1.1.0-alpha05'
+    implementation 'com.github.hannesa2:FloatingActionButton:2.3.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'

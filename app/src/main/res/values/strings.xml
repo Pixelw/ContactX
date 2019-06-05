@@ -13,7 +13,7 @@
     <string name="contactsave">Saved</string>
     <string name="avatar">Avatar</string>
     <string name="missingname">A name is required</string>
-    <string name="missingNumber">A Number is required</string>
+    <string name="missingNumber">A number is required</string>
     <string name="save">Save</string>
     <string name="futurebirth" translatable="false">Is that a real birthday?</string>
     <string name="refresh">Copy List</string>
@@ -30,7 +30,7 @@
     <string name="deleteQuestion">Delete this contact?</string>
     <string name="no_contact">No Contact</string>
     <string name="import_contact_from_system">Import system contacts</string>
-    <string name="no_email">No e address</string>
+    <string name="no_email">No email address</string>
     <string name="picknumber">Pick up a phone number</string>
     <string name="makeCall">Make a Call</string>
     <string name="copyright" translatable="false">©2019 Pixel Inc.</string>
@@ -39,7 +39,7 @@
     <string name="deleteHint">Long press \'pencil\' button to delete</string>
     <string name="mygmail" translatable="false">sulycarl34@gmail.com</string>
     <string name="booyah" translatable="false">Booyah!</string>
-    <string name="ending" translatable="false">2019/1/11</string>
+    <string name="ending" translatable="false">2019/6/1</string>
     <string name="share_contact">Share Contact</string>
     <string name="scanthis">Scan this QRCode with ContactX</string>
     <string name="foundcontact">Found contact in this QRCode</string>
@@ -51,18 +51,16 @@
     <string name="done">Done</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header" translatable="false">Messages</string>
-    <string name="sync_header" translatable="false">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title" translatable="false">Your signature</string>
-    <string name="reply_title" translatable="false">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title" translatable="false">Sync email periodically</string>
-    <string name="attachment_title" translatable="false">Download incoming attachments</string>
-    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <!--  Preferences -->
+    <string name="qr_format">QR Code format</string>
+    <string name="using_base64">Using Base64 encode</string>
+    <string name="using_json">Using unencrypted JSON</string>
+    <string name="use_base64">Use Base64 Encryption</string>
+    <string name="settings">Settings</string>
+    <string name="error_action">Error occurred, check your permission settings, or this action is not supported by this system.</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="import_tutorial">Click the avatar to select</string>
+    <string name="scan_qr">Scan QR Code</string>
+    <string name="too_large">Data is too large,please shorten the detail.</string>
 </resources>

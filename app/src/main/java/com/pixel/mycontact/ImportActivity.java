@@ -5,20 +5,21 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 
@@ -76,6 +77,7 @@ public class ImportActivity extends AppCompatActivity {
         peopleDB = new PeopleDB(ImportActivity.this);
         adapter = new PeopleAdapter(sysConList);
         recyclerView.setAdapter(adapter);
+        Toast.makeText(ImportActivity.this,getString(R.string.import_tutorial),Toast.LENGTH_LONG).show();
     }
 
     @Override

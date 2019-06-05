@@ -42,4 +42,14 @@
     <string name="done">完成</string>
     <string name="missingNumber">需要号码</string>
     <string name="title_activity_settings">设置</string>
+    <string name="error_action">发生错误，请检查权限设置，或是该系统不支持此操作。</string>
+    <string name="invalid_email">无效电子邮件地址</string>
+    <string name="qr_format">二维码格式设置</string>
+    <string name="use_base64">使用 Base64 加密</string>
+    <string name="using_base64">将使用 Base64 加密二维码内容</string>
+    <string name="using_json">将使用明文JSON</string>
+    <string name="settings">设置</string>
+    <string name="import_tutorial">点击头像后点击完成来导入</string>
+    <string name="scan_qr">扫描二维码</string>
+    <string name="too_large">数据太大，请缩减长度。</string>
 </resources>

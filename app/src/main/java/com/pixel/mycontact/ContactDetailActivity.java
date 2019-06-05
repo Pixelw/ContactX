@@ -3,23 +3,14 @@ package com.pixel.mycontact;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
+import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +18,25 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
 import com.github.sumimakito.awesomeqr.RenderResult;
 import com.github.sumimakito.awesomeqr.option.RenderOption;
 import com.github.sumimakito.awesomeqr.option.background.BlendBackground;
 import com.github.sumimakito.awesomeqr.option.color.Color;
 import com.github.sumimakito.awesomeqr.option.logo.Logo;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
@@ -45,7 +49,7 @@ public class ContactDetailActivity extends AppCompatActivity {
     private List<DetailList> details;
     private People people;
     private CoordinatorLayout cdrLay;
-
+    private SharedPreferences preferences;
     private PeopleDB peopleDB;
 
     @Override
@@ -65,7 +69,7 @@ public class ContactDetailActivity extends AppCompatActivity {
     }
 
     private void generateQR() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.flat)
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.flat)
                 .copy(Bitmap.Config.ARGB_8888, true);
 
 
@@ -82,44 +86,58 @@ public class ContactDetailActivity extends AppCompatActivity {
 
         Logo logo = new Logo();
         Bitmap bitmap1 = BitmapFactory.decodeResource
-                (getResources(),R.drawable.pixel)
+                (getResources(), R.drawable.pixel)
                 .copy(Bitmap.Config.ARGB_8888, true);
         logo.setBitmap(bitmap1);
         logo.setBorderRadius(10); // radius for logo's corners
         logo.setBorderWidth(10); // width of the border to be added around the logo
         logo.setScale(0.2f); // scale for the logo in the QR code
 //        logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
+        boolean isUsingBase64 = preferences.getBoolean("base64", false);
 
         RenderOption renderOption = new RenderOption();
-        renderOption.setContent(PeopleResolver.urlHeader + PeopleResolver.jsonQueryPara + people.toJSON());
-        renderOption.setSize(800);
-        renderOption.setBorderWidth(20);
-        renderOption.setRoundedPatterns(true);
-        renderOption.setPatternScale(0.5f);
-        renderOption.setColor(color);
-        renderOption.setBackground(background);
-        renderOption.setClearBorder(false);
-        renderOption.setLogo(logo);
-
-        try {
-            RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
-            if (renderResult.getBitmap() != null) {
-                ImageView imgQRCode = new ImageView(getApplicationContext());
-                imgQRCode.setImageBitmap(renderResult.getBitmap());
-                AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
-                builder.setTitle(R.string.scanthis)
-                        .setView(imgQRCode)
-                        .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        String stringContent;
+        if (isUsingBase64) {
+            stringContent = PeopleResolver.urlHeader + PeopleResolver.b64QueryData +
+                    Base64.encodeToString(people.toJSON().getBytes(), Base64.DEFAULT);
+            Log.d("base64", stringContent);
+            renderOption.setContent(stringContent);
+        } else {
+            stringContent = PeopleResolver.urlHeader + PeopleResolver.jsonQueryPara + people.toJSON();
+            renderOption.setContent(stringContent);
         }
+        Log.d("generateQR: length", String.valueOf(stringContent.length()));
+        if (stringContent.length() >= 512) {
+            Snackbar.make(cdrLay, getString(R.string.too_large), Snackbar.LENGTH_SHORT).show();
+        } else {
+            renderOption.setSize(800);
+            renderOption.setBorderWidth(20);
+            renderOption.setRoundedPatterns(true);
+            renderOption.setPatternScale(0.5f);
+            renderOption.setColor(color);
+            renderOption.setBackground(background);
+            renderOption.setClearBorder(false);
+            renderOption.setLogo(logo);
+
+            try {
+                RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
+                if (renderResult.getBitmap() != null) {
+                    ImageView imgQRCode = new ImageView(getApplicationContext());
+                    imgQRCode.setImageBitmap(renderResult.getBitmap());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
+                    builder.setTitle(R.string.scanthis)
+                            .setView(imgQRCode)
+                            .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {}
+                            })
+                            .show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -147,7 +165,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         DetailAdapter adapter = new DetailAdapter(details);
         recyclerView.setAdapter(adapter);
         //到AddUserActivity去修改联系人，extra传入序列化的people对象
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_edit);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,10 +233,16 @@ public class ContactDetailActivity extends AppCompatActivity {
                 if (people.getEmail().equals("")) {
                     Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT).show();
                 } else {
-                    Intent intent1 = new Intent(Intent.ACTION_SENDTO);
-                    intent1.setData(Uri.parse("mailto:" + people.getEmail()));
-                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
-                    startActivity(intent1);
+                    try {
+                        Intent intent1 = new Intent(Intent.ACTION_SENDTO);
+                        intent1.setData(Uri.parse("mailto:" + people.getEmail()));
+                        intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
+                        startActivity(intent1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
                 }
 
             }
@@ -245,8 +269,10 @@ public class ContactDetailActivity extends AppCompatActivity {
                                     intentSms.putExtra("address", item[which]);
                                     intentSms.setType("vnd.android-dir/mms-sms");
                                     startActivity(intentSms);
-                                } catch (SecurityException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
+                                    Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
                                 }
                             }
                         })
@@ -254,6 +280,8 @@ public class ContactDetailActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     //电话动作
@@ -273,8 +301,10 @@ public class ContactDetailActivity extends AppCompatActivity {
                             Intent intent = new Intent(Intent.ACTION_CALL);
                             intent.setData(Uri.parse("tel:" + item[which]));
                             startActivity(intent);
-                        } catch (SecurityException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
                         }
                     }
                 })
