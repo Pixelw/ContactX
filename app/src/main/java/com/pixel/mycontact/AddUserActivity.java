@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 
@@ -22,13 +25,13 @@ import java.util.Calendar;
 
 public class AddUserActivity extends AppCompatActivity {
 
-    private EditText nameText;
-    private EditText lastNameText;
-    private EditText numText;
-    private EditText num2Text;
-    private EditText emailText;
+    private TextInputLayout nameText;
+    private TextInputLayout lastNameText;
+    private TextInputLayout numText;
+    private TextInputLayout num2Text;
+    private TextInputLayout emailText;
     private TextView dateAdd;
-    private EditText noteAdd;
+    private TextInputLayout noteAdd;
     private int birthYear;
     private int birthMonth;
     private int birthDay;
@@ -57,21 +60,24 @@ public class AddUserActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.accept) {
             People savpeople = new People(
-                    nameText.getText().toString(),
-                    lastNameText.getText().toString(),
-                    numText.getText().toString(),
-                    num2Text.getText().toString(),
-                    emailText.getText().toString(),
+                    nameText.getEditText().getText().toString(),
+                    lastNameText.getEditText().getText().toString(),
+                    numText.getEditText().getText().toString(),
+                    num2Text.getEditText().getText().toString(),
+                    emailText.getEditText().getText().toString(),
                     birthYear, birthMonth, birthDay,
-                    noteAdd.getText().toString(),
+                    noteAdd.getEditText().getText().toString(),
                     id
             );
             Log.d("peopleToString", savpeople.toJSON());
-            if (nameText.getText().toString().equals("")) {//判断至少填写一个电话一个姓名
-                if (num2Text.getText().toString().equals("") || numText.getText().toString().equals(""))
-                    Toast.makeText(AddUserActivity.this,
-                            getString(R.string.missingname), Toast.LENGTH_SHORT).show();
+            if (nameText.getEditText().getText().toString().equals("")) {//判断至少填写一个电话一个姓名
+                nameText.setErrorEnabled(true);
+                nameText.setError(getString(R.string.missingname));
+            }else if (numText.getEditText().getText().toString().equals("")
+                    && num2Text.getEditText().getText().toString().equals("")){
 
+                numText.setErrorEnabled(true);
+                numText.setError(getString(R.string.missingNumber));
             } else {
                 if (isModify) {//修改模式，调用update方法
 
@@ -144,15 +150,15 @@ public class AddUserActivity extends AppCompatActivity {
 
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("getEditText().setTextI18n")
     //载入要修改的联系人
     private void toModify() {
-        nameText.setText(people.getFirstName());
-        lastNameText.setText(people.getLastName());
-        numText.setText(people.getNumber1());
-        num2Text.setText(people.getNumber2());
-        emailText.setText(people.getEmail());
-        noteAdd.setText(people.getNote());
+        nameText.getEditText().setText(people.getFirstName());
+        lastNameText.getEditText().setText(people.getLastName());
+        numText.getEditText().setText(people.getNumber1());
+        num2Text.getEditText().setText(people.getNumber2());
+        emailText.getEditText().setText(people.getEmail());
+        noteAdd.getEditText().setText(people.getNote());
         if (people.getBirthMonth() != 0) {
             nowDay = people.getBirthDay();
             nowMonth = people.getBirthMonth();
@@ -160,6 +166,7 @@ public class AddUserActivity extends AppCompatActivity {
             dateAdd.setText(people.getBirthYear() + "/" + people.getBirthMonth() + "/" + people.getBirthDay());
         }
     }
+
     //选择日期操作，填入圆角矩形的TextView内
     private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override

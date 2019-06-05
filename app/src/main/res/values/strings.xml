@@ -12,7 +12,8 @@
     <string name="telephone_number">Telephone Number</string>
     <string name="contactsave">Saved</string>
     <string name="avatar">Avatar</string>
-    <string name="missingname">A name and a number at least is required</string>
+    <string name="missingname">A name is required</string>
+    <string name="missingNumber">A Number is required</string>
     <string name="save">Save</string>
     <string name="futurebirth" translatable="false">Is that a real birthday?</string>
     <string name="refresh">Copy List</string>
@@ -51,17 +52,17 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="messages_header" translatable="false">Messages</string>
+    <string name="sync_header" translatable="false">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="signature_title" translatable="false">Your signature</string>
+    <string name="reply_title" translatable="false">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <string name="sync_title" translatable="false">Sync email periodically</string>
+    <string name="attachment_title" translatable="false">Download incoming attachments</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
 </resources>

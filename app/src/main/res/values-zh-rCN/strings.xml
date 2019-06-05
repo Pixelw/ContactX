@@ -11,7 +11,7 @@
     <string name="telephone_number">电话号码</string>
     <string name="contactsave">联系人已保存</string>
     <string name="avatar">头像</string>
-    <string name="missingname">至少填写一个姓名和手机号码</string>
+    <string name="missingname">需要姓名</string>
     <string name="save">保存</string>
     <string name="refresh">复制列表</string>
     <string name="action_settings">设置</string>
@@ -40,4 +40,6 @@
     <string name="ok">好</string>
     <string name="invalidqr">无效二维码</string>
     <string name="done">完成</string>
+    <string name="missingNumber">需要号码</string>
+    <string name="title_activity_settings">设置</string>
 </resources>
