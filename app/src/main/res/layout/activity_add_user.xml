@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBarAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarAdd"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -23,7 +23,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="@style/ToolbarTheme" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,13 +31,13 @@
         android:fillViewport="false"
         android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".AddUserActivity">
 
-            <android.support.design.card.MaterialCardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/add_nameCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,9 +84,9 @@
                         android:nextFocusForward="@id/numAdd"
                         android:singleLine="true" />
                 </GridLayout>
-            </android.support.design.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <android.support.design.card.MaterialCardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/add_numCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,9 +151,9 @@
                         android:nextFocusForward="@id/noteAdd"
                         android:singleLine="true" />
                 </GridLayout>
-            </android.support.design.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <android.support.design.card.MaterialCardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/add_otherCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,8 +200,8 @@
                         android:hint="@string/notes"
                         android:lines="3" />
                 </GridLayout>
-            </android.support.design.card.MaterialCardView>
-        </android.support.constraint.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>
 

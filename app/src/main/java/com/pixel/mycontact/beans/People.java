@@ -1,7 +1,5 @@
 package com.pixel.mycontact.beans;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 
 /*

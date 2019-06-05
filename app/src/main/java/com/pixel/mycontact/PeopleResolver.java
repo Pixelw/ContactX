@@ -1,5 +1,7 @@
 package com.pixel.mycontact;
 
+import android.util.Base64;
+
 import com.pixel.mycontact.beans.People;
 
 import org.json.JSONArray;
@@ -7,8 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class PeopleResolver {
-    public static String urlHeader = "pixel://mct?";
-    public static String jsonQueryPara = "json=";
+    static String urlHeader = "pixel://mct?";
+    static String jsonQueryPara = "json=";
+    static String b64QueryData = "b64=";
+
     static People resolveJson(String json) {
         People peopleFromJson;
         JSONObject j = null;
@@ -28,4 +32,18 @@ class PeopleResolver {
         }
         return null;
     }
+
+    static People resolveBase64Json(String b64Json){
+        String decoded = null;
+        try {
+            decoded = new String(Base64.decode(b64Json.getBytes(),Base64.DEFAULT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resolveJson(decoded);
+    }
+
+
+
+
 }
