@@ -68,11 +68,7 @@ public class ImportActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         sysConList = new ArrayList<>();
 
-        if (ContextCompat.checkSelfPermission(ImportActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ImportActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
-        } else {
-            readAllSystemContacts();
-        }
+       readAllSystemContacts();
 
         peopleDB = new PeopleDB(ImportActivity.this);
         adapter = new PeopleAdapter(sysConList);
@@ -80,18 +76,7 @@ public class ImportActivity extends AppCompatActivity {
         Toast.makeText(ImportActivity.this,getString(R.string.import_tutorial),Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        LinearLayout layout = findViewById(R.id.importList);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                readAllSystemContacts();
-            } else {
-                Snackbar.make(layout, R.string.perde, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        }
-    }
+
 
     public void readAllSystemContacts() {
         Cursor cursor = null;

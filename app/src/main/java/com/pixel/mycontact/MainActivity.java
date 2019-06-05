@@ -11,13 +11,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,8 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 copyList();
                 break;
             case R.id.import_contact:
-                Intent intent = new Intent(MainActivity.this, ImportActivity.class);
-                startActivity(intent);
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, ImportActivity.class);
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.menu_about:
                 Intent intenta = new Intent(MainActivity.this, AboutActivity.class);
@@ -189,6 +198,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        LinearLayout layout = findViewById(R.id.importList);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MainActivity.this, ImportActivity.class);
+                startActivity(intent);
+            } else {
+                Snackbar.make(cdntlayout, R.string.perde, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        }
+    }
     @Override
     protected void onResume() {
         //活动继续运行时，检查列表长度，若为空显示“无联系人”
