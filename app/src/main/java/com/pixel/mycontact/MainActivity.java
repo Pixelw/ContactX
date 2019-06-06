@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,14 +73,15 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, ImportActivity.class);
                     startActivity(intent);
                 }
-
                 break;
             case R.id.menu_about:
                 Intent intenta = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intenta);
+                break;
             case R.id.menu_settings:
                 Intent intentset = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentset);
+                break;
             default:
                 break;
         }
@@ -200,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        LinearLayout layout = findViewById(R.id.importList);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MainActivity.this, ImportActivity.class);
