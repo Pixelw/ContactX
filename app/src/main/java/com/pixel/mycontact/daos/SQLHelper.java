@@ -9,6 +9,7 @@ import android.widget.Toast;
 public class SQLHelper extends SQLiteOpenHelper {
 
     private Context mContext;
+
     SQLHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.mContext = context;
@@ -23,8 +24,8 @@ public class SQLHelper extends SQLiteOpenHelper {
                 "birthYear integer,birthMonth integer,birthDay integer,note text)";
         db.execSQL(sql);
 
-        if (db.isOpen()){
-            Toast.makeText(mContext,"Created",Toast.LENGTH_SHORT).show();
+        if (db.isOpen()) {
+            Toast.makeText(mContext, "Created", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/import_contact"
-        android:title="@string/import_contact_from_system"/>
+        android:title="@string/import_contact_from_system" />
     <item
         android:id="@+id/menu_copylist"
         android:title="@string/refresh" />
@@ -11,9 +11,9 @@
         android:title="@string/initdb" />
     <item
         android:id="@+id/menu_settings"
-        android:title="@string/settings"/>
+        android:title="@string/settings" />
     <item
         android:id="@+id/menu_about"
-        android:title="@string/about"/>
+        android:title="@string/about" />
 
 </menu>

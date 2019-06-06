@@ -61,14 +61,13 @@ public class ImportActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         sysConList = new ArrayList<>();
 
-       readAllSystemContacts();
+        readAllSystemContacts();
 
         peopleDB = new PeopleDB(ImportActivity.this);
         adapter = new PeopleAdapter(sysConList);
         recyclerView.setAdapter(adapter);
-        Toast.makeText(ImportActivity.this,getString(R.string.import_tutorial),Toast.LENGTH_LONG).show();
+        Toast.makeText(ImportActivity.this, getString(R.string.import_tutorial), Toast.LENGTH_LONG).show();
     }
-
 
 
     public void readAllSystemContacts() {

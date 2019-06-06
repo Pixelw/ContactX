@@ -42,6 +42,21 @@ public class AddUserActivity extends AppCompatActivity {
     private People people;
 
     private boolean isModify = false;
+    //选择日期操作，填入圆角矩形的TextView内
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            birthYear = year;
+            birthMonth = month + 1;
+            birthDay = dayOfMonth;
+            String dateText = birthYear + "/" + birthMonth + "/" + birthDay;
+            if (birthYear >= nowYear && birthMonth >= nowMonth && birthDay > nowDay) {
+                Toast.makeText(AddUserActivity.this, getString(R.string.futurebirth),
+                        Toast.LENGTH_SHORT).show();
+            }
+            dateAdd.setText(dateText);
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,11 +88,11 @@ public class AddUserActivity extends AppCompatActivity {
             if (nameText.getEditText().getText().toString().equals("")) {//判断至少填写一个电话一个姓名
                 nameText.setErrorEnabled(true);
                 nameText.setError(getString(R.string.missingname));
-            }else if (numText.getEditText().getText().toString().equals("")
+            } else if (numText.getEditText().getText().toString().equals("")
                     && num2Text.getEditText().getText().toString().equals("")) {
                 numText.setErrorEnabled(true);
                 numText.setError(getString(R.string.missingNumber));
-            }else if (!emailInput.equals("") && !emailInput.contains("@")){
+            } else if (!emailInput.equals("") && !emailInput.contains("@")) {
                 emailText.setErrorEnabled(true);
                 emailText.setError(getString(R.string.invalid_email));
             } else {
@@ -101,7 +116,6 @@ public class AddUserActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,20 +182,4 @@ public class AddUserActivity extends AppCompatActivity {
             dateAdd.setText(people.getBirthYear() + "/" + people.getBirthMonth() + "/" + people.getBirthDay());
         }
     }
-
-    //选择日期操作，填入圆角矩形的TextView内
-    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            birthYear = year;
-            birthMonth = month + 1;
-            birthDay = dayOfMonth;
-            String dateText = birthYear + "/" + birthMonth + "/" + birthDay;
-            if (birthYear >= nowYear && birthMonth >= nowMonth && birthDay > nowDay) {
-                Toast.makeText(AddUserActivity.this, getString(R.string.futurebirth),
-                        Toast.LENGTH_SHORT).show();
-            }
-            dateAdd.setText(dateText);
-        }
-    };
 }

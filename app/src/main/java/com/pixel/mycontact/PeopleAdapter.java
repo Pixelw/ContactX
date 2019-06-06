@@ -18,30 +18,14 @@ import java.util.List;
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolder> {
 
     private List<People> mPeopleList;
-
-    public List<People> getCheckedPeople() {
-        return checkedPeople;
-    }
-
     private List<People> checkedPeople = new ArrayList<>();
-
-    static class mViewHolder extends RecyclerView.ViewHolder {
-        //list 的item包含头像和姓名
-        ImageView avatar;
-        TextView name;
-
-        View peopleView;
-
-        mViewHolder(@NonNull View itemView) {
-            super(itemView);
-            peopleView = itemView;
-            avatar = itemView.findViewById(R.id.item_avatar);
-            name = itemView.findViewById(R.id.item_name);
-        }
-    }
 
     PeopleAdapter(List<People> peopleList) {
         mPeopleList = peopleList;
+    }
+
+    public List<People> getCheckedPeople() {
+        return checkedPeople;
     }
 
     @NonNull
@@ -56,7 +40,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
                 int position = holder.getAdapterPosition();
                 People people = mPeopleList.get(position);
                 Intent intent = new Intent(v.getContext(), ContactDetailActivity.class);
-                intent.putExtra("people",people);
+                intent.putExtra("people", people);
                 v.getContext().startActivity(intent);
             }
         });
@@ -77,11 +61,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
              */
             @Override
             public void onClick(View v) {
-                if (!people.getChecked()){
+                if (!people.getChecked()) {
                     mViewHolder.avatar.setImageResource(R.drawable.ic_done_black_24dp);
                     people.setChecked(true);
                     checkedPeople.add(people);
-                }else{
+                } else {
                     mViewHolder.avatar.setImageResource(R.drawable.ic_account_circle_black_24dp);
                     people.setChecked(false);
                     checkedPeople.remove(people);
@@ -91,9 +75,23 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
         });
     }
 
-
     @Override
     public int getItemCount() {
         return mPeopleList.size();
+    }
+
+    static class mViewHolder extends RecyclerView.ViewHolder {
+        //list 的item包含头像和姓名
+        ImageView avatar;
+        TextView name;
+
+        View peopleView;
+
+        mViewHolder(@NonNull View itemView) {
+            super(itemView);
+            peopleView = itemView;
+            avatar = itemView.findViewById(R.id.item_avatar);
+            name = itemView.findViewById(R.id.item_name);
+        }
     }
 }

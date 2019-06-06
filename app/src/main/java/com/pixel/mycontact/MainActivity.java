@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         //下拉刷新功能
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -210,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
     protected void onResume() {
         //活动继续运行时，检查列表长度，若为空显示“无联系人”

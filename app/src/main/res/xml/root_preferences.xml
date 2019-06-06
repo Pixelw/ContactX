@@ -19,11 +19,11 @@
     <PreferenceCategory app:title="@string/qr_format">
 
         <SwitchPreferenceCompat
+            app:defaultValue="false"
             app:key="base64"
             app:summaryOff="@string/using_json"
             app:summaryOn="@string/using_base64"
-            app:title="@string/use_base64"
-            app:defaultValue="false"/>
+            app:title="@string/use_base64" />
 
     </PreferenceCategory>
 

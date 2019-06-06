@@ -29,13 +29,13 @@
                 android:layout_margin="5dp">
 
                 <LinearLayout
+                    android:id="@+id/sendSms"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@drawable/item_bg"
                     android:clickable="true"
                     android:focusable="true"
-                    android:id="@+id/sendSms">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -57,23 +57,23 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ivCall"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@drawable/item_bg"
                     android:clickable="true"
                     android:focusable="true"
-                    android:id="@+id/ivCall">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:layout_marginLeft="32dp"
                         android:layout_marginRight="32dp"
-                        android:layout_gravity="center"
                         android:src="@drawable/ic_phone_black_24dp"
-                        android:tint="@color/colorAccent"/>
+                        android:tint="@color/colorAccent" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -85,21 +85,21 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/sendEmail"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@drawable/item_bg"
                     android:clickable="true"
                     android:focusable="true"
-                    android:id="@+id/sendEmail">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:layout_marginLeft="32dp"
                         android:layout_marginRight="32dp"
-                        android:layout_gravity="center"
                         android:src="@drawable/ic_email_black_24dp"
                         android:tint="@color/colorAccent" />
 
@@ -115,14 +115,15 @@
 
 
         </androidx.cardview.widget.CardView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/actionCard"
-            app:layout_constraintEnd_toEndOf="@id/actionCard"
             android:layout_margin="5dp"
+            android:text="@string/deleteHint"
             android:textSize="12sp"
-            android:text="@string/deleteHint"/>
+            app:layout_constraintEnd_toEndOf="@id/actionCard"
+            app:layout_constraintTop_toBottomOf="@+id/actionCard" />
 
 
         <androidx.cardview.widget.CardView

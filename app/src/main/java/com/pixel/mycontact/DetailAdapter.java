@@ -15,28 +15,18 @@ import java.util.List;
 
 /**
  * 生成详细信息列表
- *
  */
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.mViewHolder> {
     private List<DetailList> listd;
-    static class mViewHolder extends RecyclerView.ViewHolder {
-        ImageView hd;
-        TextView d1;
-        TextView d2;
-        mViewHolder(@NonNull View itemView) {
-            super(itemView);
-            hd = itemView.findViewById(R.id.item_dh);
-            d1 = itemView.findViewById(R.id.item_d1);
-            d2 = itemView.findViewById(R.id.item_d2);
-        }
-    }
 
-    DetailAdapter(List<DetailList> list){
+    DetailAdapter(List<DetailList> list) {
         listd = list;
     }
+
     @NonNull
     public DetailAdapter.mViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_detaillist,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_detaillist,
+                viewGroup, false);
         return new mViewHolder(view);
     }
 
@@ -51,5 +41,18 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.mViewHolde
     @Override
     public int getItemCount() {
         return listd.size();
+    }
+
+    static class mViewHolder extends RecyclerView.ViewHolder {
+        ImageView hd;
+        TextView d1;
+        TextView d2;
+
+        mViewHolder(@NonNull View itemView) {
+            super(itemView);
+            hd = itemView.findViewById(R.id.item_dh);
+            d1 = itemView.findViewById(R.id.item_d1);
+            d2 = itemView.findViewById(R.id.item_d2);
+        }
     }
 }

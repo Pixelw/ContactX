@@ -20,7 +20,7 @@ public class AboutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(Intent.ACTION_SENDTO);
                 intent1.setData(Uri.parse("mailto:sulycarl34@gmail.com"));
-                intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from "+R.string.app_name);
+                intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
                 startActivity(intent1);
             }
         });

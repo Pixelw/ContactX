@@ -129,7 +129,8 @@ public class ContactDetailActivity extends AppCompatActivity {
                             .setView(imgQRCode)
                             .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {}
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
                             })
                             .show();
                 }

@@ -29,11 +29,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 Uri url = Uri.parse(rawResult.getText());
                 peopleFromQR = PeopleResolver.resolveJson(url.getQueryParameter("json"));
                 handleUrl();
-            }else if(rawResult.getText().startsWith("pixel://mct?b64")){
+            } else if (rawResult.getText().startsWith("pixel://mct?b64")) {
                 Uri url = Uri.parse(rawResult.getText());
                 peopleFromQR = PeopleResolver.resolveBase64Json(url.getQueryParameter("b64"));
                 handleUrl();
-            }else{
+            } else {
                 AlertDialog.Builder invalidQr = new AlertDialog.Builder(QRCodeScanActivity.this);
                 invalidQr.setTitle(R.string.invalidqr)
                         .setMessage(R.string.not_supported_qr)
@@ -95,7 +95,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
         scannerView = findViewById(R.id.scannerView);
         scannerView.setResultHandler(resultHandler);
 
-        Toolbar toolbar =findViewById(R.id.toolbarScan);
+        Toolbar toolbar = findViewById(R.id.toolbarScan);
         toolbar.setTitle(getString(R.string.scan_qr));
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

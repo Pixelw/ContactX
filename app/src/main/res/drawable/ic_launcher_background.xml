@@ -3,10 +3,10 @@
     android:shape="rectangle">
     <size
         android:width="216dp"
-        android:height="216dp"/>
+        android:height="216dp" />
     <solid android:color="@android:color/white" />
     <gradient
         android:angle="270"
-        android:startColor="@android:color/holo_blue_light"
-        android:endColor="@color/colorPrimary" />
+        android:endColor="@color/colorPrimary"
+        android:startColor="@android:color/holo_blue_light" />
 </shape>

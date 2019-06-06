@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".QRCodeScanActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".QRCodeScanActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,9 +21,10 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="@style/ToolbarTheme" />
     </com.google.android.material.appbar.AppBarLayout>
+
     <me.dm7.barcodescanner.zxing.ZXingScannerView
+        android:id="@+id/scannerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scannerView"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>
