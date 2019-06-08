@@ -130,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-
+            android:layout_marginBottom="25dp"
             app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="@id/actionCard"
             app:layout_constraintStart_toStartOf="@+id/actionCard"

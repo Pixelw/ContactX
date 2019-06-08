@@ -14,7 +14,7 @@ class PeopleResolver {
 
     static People resolveJson(String json) {
         People peopleFromJson;
-        JSONObject j = null;
+        JSONObject j;
         try {
             JSONArray jsonArray = new JSONArray(json);
             j = jsonArray.getJSONObject(0);

@@ -72,7 +72,8 @@
                             android:imeOptions="actionNext"
                             android:maxLength="48"
                             android:nextFocusForward="@id/lastNameAdd"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:inputType="textPersonName"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageView
@@ -94,7 +95,8 @@
                             android:imeOptions="actionNext"
                             android:maxLength="48"
                             android:nextFocusForward="@id/numAdd"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:inputType="textPersonName"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -183,7 +185,8 @@
                             android:imeOptions="actionNext"
                             android:maxLength="48"
                             android:nextFocusForward="@id/noteAdd"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:inputType="textEmailAddress"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
@@ -239,7 +242,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:lines="3"
-                            android:maxLength="384" />
+                            android:maxLength="384"
+                            android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
             </com.google.android.material.card.MaterialCardView>

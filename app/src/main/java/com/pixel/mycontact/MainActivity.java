@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                         peopleFromUrl = PeopleResolver.resolveBase64Json(qrdata);
                     }
 
-
                     if (peopleFromUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         final People finalPeopleFromUrl = peopleFromUrl;
@@ -189,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 })
                                 .show();
+                    } else {
+                        Snackbar.make(cdntlayout, getString(R.string.invalidqr), Snackbar.LENGTH_LONG).show();
                     }
-                } else {
-                    Snackbar.make(cdntlayout, getString(R.string.invalidqr), Snackbar.LENGTH_LONG).show();
                 }
             }
         }

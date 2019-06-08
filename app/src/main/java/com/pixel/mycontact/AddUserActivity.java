@@ -82,7 +82,6 @@ public class AddUserActivity extends AppCompatActivity {
                     noteAdd.getEditText().getText().toString(),
                     id
             );
-            Log.d("peopleToString", savpeople.toJSON());
 
             String emailInput = emailText.getEditText().getText().toString();
             if (nameText.getEditText().getText().toString().equals("")) {//判断至少填写一个电话一个姓名
