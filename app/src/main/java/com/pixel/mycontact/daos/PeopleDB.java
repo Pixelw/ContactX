@@ -120,6 +120,9 @@ public class PeopleDB {
     public boolean checkdb() {
         return db.isOpen();
     }
+    public void closeDB(){
+        db.close();
+    }
 
 
 }

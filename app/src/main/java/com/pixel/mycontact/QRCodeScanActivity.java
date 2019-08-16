@@ -119,4 +119,10 @@ public class QRCodeScanActivity extends AppCompatActivity {
         super.onPause();
         scannerView.stopCamera();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        peopleDB.closeDB();
+    }
 }

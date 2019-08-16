@@ -189,6 +189,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (peopleDB.deleteContact(people.getId()) > 0) {
+                                    peopleDB.closeDB();
                                     finish();
                                 }
                             }
