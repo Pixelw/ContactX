@@ -100,7 +100,7 @@ public class AddUserActivity extends AppCompatActivity {
                     && TextUtils.isEmpty(num2Text.getEditText().getText().toString())) {
                 numText.setErrorEnabled(true);
                 numText.setError(getString(R.string.missingNumber));
-            } else if (TextUtils.isEmpty(emailInput) && !emailInput.contains("@")) {
+            } else if (!TextUtils.isEmpty(emailInput) && !emailInput.contains("@")) {
                 emailText.setErrorEnabled(true);
                 emailText.setError(getString(R.string.invalid_email));
             } else {
@@ -139,6 +139,9 @@ public class AddUserActivity extends AppCompatActivity {
         dateAdd = findViewById(R.id.dateAdd);
         noteAdd = findViewById(R.id.noteAdd);
 
+
+        nameText.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE);
+
         //解析intent，如果有people对象则将对象的值填入文本框内，进入修改模式；
         Intent intent = getIntent();
         if (intent.hasExtra("people")) {
@@ -174,7 +177,6 @@ public class AddUserActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("getEditText().setTextI18n")
     //载入要修改的联系人
     private void toModify() {
         nameText.getEditText().setText(people.getFirstName());
@@ -187,7 +189,8 @@ public class AddUserActivity extends AppCompatActivity {
             nowDay = people.getBirthDay();
             nowMonth = people.getBirthMonth();
             nowYear = people.getBirthYear();
-            dateAdd.setText(people.getBirthYear() + "/" + people.getBirthMonth() + "/" + people.getBirthDay());
+            String dateStr = String.format("%d/%d/%d",people.getBirthYear(),people.getBirthMonth(),people.getBirthDay());
+            dateAdd.setText(dateStr);
         }
     }
 }
