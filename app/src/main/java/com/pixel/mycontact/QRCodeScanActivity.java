@@ -1,7 +1,6 @@
 package com.pixel.mycontact;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.Result;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.utils.PeopleResolver;
 import com.pixel.mycontact.utils.PermissionsUtils;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -130,14 +130,12 @@ public class QRCodeScanActivity extends AppCompatActivity {
     private void initScanner() {
         scannerView = findViewById(R.id.scannerView);
         scannerView.setResultHandler(resultHandler);
-        scannerView.startCamera();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (scannerView != null){
-            scannerView.setResultHandler(resultHandler);
             scannerView.startCamera();
         }
     }

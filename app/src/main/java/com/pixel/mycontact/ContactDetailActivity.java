@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.utils.PeopleResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,7 +234,17 @@ public class ContactDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (people.getEmail().equals("")) {
-                    Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT)
+                            .setAction(R.string.settings, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(ContactDetailActivity.this,
+                                    AddUserActivity.class);
+                            intent.putExtra("people", people);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).show();
                 } else {
                     try {
                         Intent intent1 = new Intent(Intent.ACTION_SENDTO);

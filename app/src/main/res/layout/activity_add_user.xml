@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             tools:context=".AddUserActivity">
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/add_nameCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,9 +99,9 @@
                             android:inputType="textPersonName"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/add_numCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -190,9 +190,9 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/add_otherCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -246,7 +246,7 @@
                             android:inputType="text"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </GridLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

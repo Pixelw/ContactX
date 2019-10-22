@@ -29,6 +29,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.utils.PeopleResolver;
 
 import java.util.ArrayList;
 import java.util.List;
