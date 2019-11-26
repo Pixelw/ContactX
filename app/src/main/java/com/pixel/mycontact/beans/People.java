@@ -19,7 +19,7 @@ public class People implements Serializable {
     private int m;
     private int d;
     private String no;
-    private Boolean isChecked = false;
+    private Boolean selected = false;
 
     public People(String firstName, String lastName, String number1, String number2, String email,
                   int birthYear, int birthMonth, int birthDay, String note, int id) {
@@ -111,12 +111,12 @@ public class People implements Serializable {
         return e;
     }
 
-    public Boolean getChecked() {
-        return isChecked;
+    public Boolean isSelected() {
+        return selected;
     }
 
-    public void setChecked(Boolean checked) {
-        isChecked = checked;
+    public void isSelected(Boolean checked) {
+        selected = checked;
     }
 
     public String toJSON() {

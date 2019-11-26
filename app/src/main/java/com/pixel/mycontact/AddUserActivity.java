@@ -2,6 +2,7 @@ package com.pixel.mycontact;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.Calendar;
 
@@ -115,7 +117,6 @@ public class AddUserActivity extends AppCompatActivity {
                         finish();
                     }
                 }
-
             }
         }
         return super.onOptionsItemSelected(item);
@@ -135,9 +136,6 @@ public class AddUserActivity extends AppCompatActivity {
         dateAdd = findViewById(R.id.dateAdd);
         noteAdd = findViewById(R.id.noteAdd);
 
-
-        nameText.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE);
-
         //解析intent，如果有people对象则将对象的值填入文本框内，进入修改模式；
         Intent intent = getIntent();
         if (intent.hasExtra("people")) {
@@ -149,6 +147,7 @@ public class AddUserActivity extends AppCompatActivity {
             toolbar.setTitle(R.string.createcontact);
         }
         setSupportActionBar(toolbar);
+        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
         //返回键
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,11 +1,14 @@
 package com.pixel.mycontact;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.pixel.mycontact.utils.StyleUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -20,6 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbarSettings);
         setSupportActionBar(toolbar);
+        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

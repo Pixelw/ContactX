@@ -53,24 +53,19 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
         final People people = mPeopleList.get(i);
         mViewHolder.name.setText(people.getName());
         mViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
-            /**
-             * WIP * WIP * WIP
-             * 实现点击头像改变的效果，实现CheckBox的功能
-             * 点击头像可以添加到列表，但是显示不正常
-             * “尚未完成'
-             */
+
             @Override
             public void onClick(View v) {
-                if (!people.getChecked()) {
+                if (!people.isSelected()) {
                     mViewHolder.avatar.setImageResource(R.drawable.ic_done_black_24dp);
-                    people.setChecked(true);
+                    people.isSelected(true);
                     checkedPeople.add(people);
                 } else {
                     mViewHolder.avatar.setImageResource(R.drawable.ic_account_circle_black_24dp);
-                    people.setChecked(false);
+                    people.isSelected(false);
                     checkedPeople.remove(people);
                 }
-                notifyDataSetChanged();
+                //notifyDataSetChanged();
             }
         });
     }

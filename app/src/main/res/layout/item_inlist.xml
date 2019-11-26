@@ -25,7 +25,6 @@
         android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/name"
-        android:textColor="@color/colorText"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/item_avatar"
         app:layout_constraintStart_toEndOf="@id/item_avatar"

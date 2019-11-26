@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
@@ -30,6 +32,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 import com.pixel.mycontact.utils.PeopleResolver;
+import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,67 @@ public class MainActivity extends AppCompatActivity {
     private PeopleDB peopleDB;
 
     private CoordinatorLayout cdntlayout;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        Toolbar toolbar = findViewById(R.id.toolbarMain);
+        setSupportActionBar(toolbar);
+        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        FloatingActionMenu fabMenu = findViewById(R.id.fab_menu);
+        fabMenu.setClosedOnTouchOutside(true);
+        com.github.clans.fab.FloatingActionButton fabNew = findViewById(R.id.fab_new);
+        com.github.clans.fab.FloatingActionButton fabScan = findViewById(R.id.fab_scan);
+        //创建联系人入口（悬浮按钮）
+        fabNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        fabScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                        ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 10);
+                } else {
+                    Intent intentQR = new Intent(MainActivity.this, QRCodeScanActivity.class);
+                    startActivity(intentQR);
+                }
+            }
+        });
+
+
+        //下拉刷新功能
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorSecondary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshDB();
+            }
+        });
+
+        noContact = findViewById(R.id.noContact);
+        cdntlayout = findViewById(R.id.cdntlayoutMain);
+        recyclerView = findViewById(R.id.mainList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        //由peopledb类获取数据库联系人list，然后传入RecyclerView的适配器类
+        peopleDB = new PeopleDB(MainActivity.this);
+        list = new ArrayList<>();
+        list = peopleDB.queryAll(list);
+        adapter = new PeopleAdapter(list);
+        recyclerView.setAdapter(adapter);
+//URL启动的方式
+        urlIntentResolve();
+    }
 
     //获取 Toolbar上的 menu
     @Override
@@ -88,66 +152,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbarMain);
-        setSupportActionBar(toolbar);
-        FloatingActionMenu fabMenu = findViewById(R.id.fab_menu);
-        fabMenu.setClosedOnTouchOutside(true);
-        com.github.clans.fab.FloatingActionButton fabNew = findViewById(R.id.fab_new);
-        com.github.clans.fab.FloatingActionButton fabScan = findViewById(R.id.fab_scan);
-        //创建联系人入口（悬浮按钮）
-        fabNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddUserActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        fabScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-                        ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
-                                != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 10);
-                } else {
-                    Intent intentQR = new Intent(MainActivity.this, QRCodeScanActivity.class);
-                    startActivity(intentQR);
-                }
-            }
-        });
-
-
-        //下拉刷新功能
-        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshDB();
-            }
-        });
-
-        noContact = findViewById(R.id.noContact);
-        cdntlayout = findViewById(R.id.cdntlayoutMain);
-        recyclerView = findViewById(R.id.mainList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        //由peopledb类获取数据库联系人list，然后传入RecyclerView的适配器类
-        peopleDB = new PeopleDB(MainActivity.this);
-        list = new ArrayList<>();
-        list = peopleDB.queryAll(list);
-        adapter = new PeopleAdapter(list);
-        recyclerView.setAdapter(adapter);
-//URL启动的方式
-        urlIntentResolve();
-    }
-
     private void urlIntentResolve() {
         Intent urlIntent = getIntent();
         if (urlIntent != null) {

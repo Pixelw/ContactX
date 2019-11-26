@@ -1,15 +1,16 @@
 package com.pixel.mycontact;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -23,8 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +41,8 @@ import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 import com.pixel.mycontact.utils.PeopleResolver;
+import com.pixel.mycontact.utils.PermissionsUtils;
+import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ public class ContactDetailActivity extends AppCompatActivity {
     private CoordinatorLayout cdrLay;
     private SharedPreferences preferences;
     private PeopleDB peopleDB;
+    private Activity activity;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,10 +149,11 @@ public class ContactDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_detail);
+        activity = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         CollapsingToolbarLayout ctLayout = findViewById(R.id.toolbar_layout);
-        ctLayout.setExpandedTitleColor(getResources().getColor(R.color.colorPrimary));
-        ctLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorText));
+//        ctLayout.setExpandedTitleColor(getResources().getColor(R.color.white));
+//        ctLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorOnPrimary));
         cdrLay = findViewById(R.id.cdntlayout);
 
         RecyclerView recyclerView = findViewById(R.id.detail_list);
@@ -161,6 +165,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         people = (People) intent.getSerializableExtra("people");
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
+        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
         //初始化详细信息列表，并设置适配器
 
         initList();
@@ -216,14 +221,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //确认并申请打电话权限
-                if (ContextCompat.checkSelfPermission
-                        (ContactDetailActivity.this, Manifest.permission.CALL_PHONE) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(ContactDetailActivity.this, new String[]
-                            {
-                                    Manifest.permission.CALL_PHONE
-                            }, 1);
-                } else {
+                if (PermissionsUtils.hasOrRequestForCall(activity, 1)) {
                     callPeople();
                 }
             }
@@ -236,15 +234,15 @@ public class ContactDetailActivity extends AppCompatActivity {
                 if (people.getEmail().equals("")) {
                     Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.settings, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(ContactDetailActivity.this,
-                                    AddUserActivity.class);
-                            intent.putExtra("people", people);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }).show();
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(ContactDetailActivity.this,
+                                            AddUserActivity.class);
+                                    intent.putExtra("people", people);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }).show();
                 } else {
                     try {
                         Intent intent1 = new Intent(Intent.ACTION_SENDTO);
@@ -308,6 +306,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         }
         builder.setTitle(R.string.picknumber)
                 .setItems(item, new DialogInterface.OnClickListener() {
+                    @SuppressLint("MissingPermission")
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try {
@@ -316,7 +315,8 @@ public class ContactDetailActivity extends AppCompatActivity {
                             startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                            Snackbar.make(cdrLay, getString(R.string.error_action),
+                                    Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         }
                     }

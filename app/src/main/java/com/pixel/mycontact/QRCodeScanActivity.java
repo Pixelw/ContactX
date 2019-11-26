@@ -2,6 +2,7 @@ package com.pixel.mycontact;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
 import com.pixel.mycontact.utils.PeopleResolver;
 import com.pixel.mycontact.utils.PermissionsUtils;
+import com.pixel.mycontact.utils.StyleUtils;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -102,6 +104,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarScan);
         toolbar.setTitle(getString(R.string.scan_qr));
         setSupportActionBar(toolbar);
+        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +112,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
             }
         });
         peopleDB = new PeopleDB(QRCodeScanActivity.this);
-        if (PermissionsUtils.getPermissionForCamera(this)) {
+        if (PermissionsUtils.hasOrRequestForCamera(this, 10)) {
             initScanner();
         }
 

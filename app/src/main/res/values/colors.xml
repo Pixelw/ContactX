@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f2f3f4</color>
-    <color name="colorPrimaryDark">#c8c9ca</color>
-    <color name="colorAccent">#6b38fb</color>
-    <color name="colorAccentLight">#d7ccf4</color>
-    <color name="colorAccentDark">#4F2AB1</color>
-    <color name="colorText">#232f34</color>
-    <color name="white">#ffffff</color>
+    <!--    light-->
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryVariant">#7986cb</color>
+    <color name="colorOnPrimary">#3C4043</color>
+    <color name="colorSecondary">#3F51B5</color>
+    <color name="colorSecondaryVariant">#7986CB</color>
+    <color name="colorSurface">#ffffff</color>
+
+    <style name="colorSurfaceDark">#fefefe</style>
+
+    <color name="colorOnSecondary">#F0F0F0</color>
+    <!--    dark-->
+    <color name="colorDarkPrimary">#64B5F6</color>
+    <color name="colorDarkPrimaryVariant">#4980AF</color>
+    <color name="colorDarkOnPrimary">#FFFFFF</color>
+    <color name="colorDarkSecondary">#03dac6</color>
+    <color name="colorDarkSecondaryVariant">#018786</color>
+    <color name="colorDarkOnSecondary">#000000</color>
+    <!--    common-->
+    <color name="colorCommonGray">#cccccc</color>
+    <color name="colorCommonWhite">#ffffff</color>
 </resources>

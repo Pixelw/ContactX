@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +10,6 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,10 +17,7 @@
             android:id="@+id/toolbarAdd"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:navigationIcon="@drawable/ic_close_black_24dp"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/ToolbarTheme" />
+            app:navigationIcon="@drawable/ic_close_black_24dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,60 +42,77 @@
                 app:cardCornerRadius="5dp"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <GridLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:columnCount="8">
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_face_black_24dp" />
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/nameAdd"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/name">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
 
-                        <com.google.android.material.textfield.TextInputEditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_face_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/nameAdd"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:imeOptions="actionNext"
-                            android:maxLength="48"
-                            android:nextFocusForward="@id/lastNameAdd"
-                            android:singleLine="true"
-                            android:inputType="textPersonName"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_subdirectory_arrow_right_black_24dp" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLength="24"
+                                android:nextFocusForward="@id/lastNameAdd"
+                                android:singleLine="true" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/lastNameAdd"
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/last_name">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
 
-                        <EditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_subdirectory_arrow_right_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/lastNameAdd"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:imeOptions="actionNext"
-                            android:maxLength="48"
-                            android:nextFocusForward="@id/numAdd"
-                            android:singleLine="true"
-                            android:inputType="textPersonName"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </GridLayout>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/last_name">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLength="48"
+                                android:nextFocusForward="@id/numAdd"
+                                android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -110,86 +124,109 @@
                 app:cardCornerRadius="5dp"
                 app:layout_constraintTop_toBottomOf="@+id/add_nameCard">
 
-                <GridLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:columnCount="8">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_phone_iphone_black_24dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/numAdd"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/phone_number">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
 
-                        <EditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_phone_iphone_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/numAdd"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:imeOptions="actionNext"
-                            android:inputType="phone"
-                            android:maxLength="24"
-                            android:nextFocusForward="@id/num2Add"
-                            android:singleLine="true" />
+                            android:layout_height="wrap_content"
+                            android:hint="@string/phone_number">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:imeOptions="actionNext"
+                                android:inputType="phone"
+                                android:maxLength="24"
+                                android:nextFocusForward="@id/num2Add"
+                                android:singleLine="true" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_phone_black_24dp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/num2Add"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/telephone_number">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
 
-                        <EditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_phone_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/num2Add"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:imeOptions="actionNext"
-                            android:inputType="phone"
-                            android:maxLength="24"
-                            android:nextFocusForward="@id/emailAdd"
-                            android:singleLine="true" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/telephone_number">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_mail_outline_black_24dp" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="phone"
+                                android:maxLength="24"
+                                android:nextFocusForward="@id/emailAdd"
+                                android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/emailAdd"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/email_address">
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
 
-                        <EditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_mail_outline_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/emailAdd"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:imeOptions="actionNext"
-                            android:maxLength="48"
-                            android:nextFocusForward="@id/noteAdd"
-                            android:singleLine="true"
-                            android:inputType="textEmailAddress"/>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/email_address">
 
-                    </com.google.android.material.textfield.TextInputLayout>
-                </GridLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionNext"
+                                android:inputType="textEmailAddress"
+                                android:maxLength="48"
+                                android:nextFocusForward="@id/noteAdd"
+                                android:singleLine="true" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -201,51 +238,63 @@
                 app:cardCornerRadius="5dp"
                 app:layout_constraintTop_toBottomOf="@+id/add_numCard">
 
-                <GridLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:columnCount="8">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_date_range_black_24dp" />
-
-                    <TextView
-                        android:id="@+id/dateAdd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:layout_margin="12dp"
-                        android:background="@drawable/rounded_rect"
-                        android:hint="@string/birthday"
-                        android:padding="5dp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/ic_format_list_bulleted_black_24dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/noteAdd"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="7"
-                        android:hint="@string/notes">
+                        android:layout_marginTop="10dp">
 
-                        <EditText
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_date_range_black_24dp" />
+
+                        <TextView
+                            android:id="@+id/dateAdd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:background="@drawable/rounded_rect"
+                            android:hint="@string/birthday"
+                            android:padding="5dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_format_list_bulleted_black_24dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/noteAdd"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:lines="3"
-                            android:maxLength="384"
-                            android:inputType="text"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </GridLayout>
+                            android:layout_height="wrap_content"
+                            android:hint="@string/notes">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="text"
+                                android:lines="3"
+                                android:maxLength="384" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
