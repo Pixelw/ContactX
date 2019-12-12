@@ -16,7 +16,8 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        StyleUtils.setStatusBarTransparent(getWindow());
+//        StatusBarCompat.translucentStatusBar(this,true);
+        StyleUtils.setStatusBarTransparent(getWindow(), true);
         TextView myGmail = findViewById(R.id.myGmail);
         myGmail.setOnClickListener(new View.OnClickListener() {
             @Override

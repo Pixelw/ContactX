@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -34,6 +33,7 @@ import com.github.sumimakito.awesomeqr.option.RenderOption;
 import com.github.sumimakito.awesomeqr.option.background.BlendBackground;
 import com.github.sumimakito.awesomeqr.option.color.Color;
 import com.github.sumimakito.awesomeqr.option.logo.Logo;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -151,6 +151,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_detail);
         activity = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         CollapsingToolbarLayout ctLayout = findViewById(R.id.toolbar_layout);
 //        ctLayout.setExpandedTitleColor(getResources().getColor(R.color.white));
 //        ctLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorOnPrimary));
@@ -165,7 +166,9 @@ public class ContactDetailActivity extends AppCompatActivity {
         people = (People) intent.getSerializableExtra("people");
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
+//        StatusBarCompat.setStatusBarColorForCollapsingToolbar(this,appBarLayout,ctLayout,
+//                toolbar, android.graphics.Color.parseColor("#ffffff"));
         //初始化详细信息列表，并设置适配器
 
         initList();

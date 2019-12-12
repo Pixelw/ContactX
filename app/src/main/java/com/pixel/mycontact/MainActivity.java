@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         Toolbar toolbar = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar, false);
+//        StatusBarCompat.translucentStatusBar(this,true);
         FloatingActionMenu fabMenu = findViewById(R.id.fab_menu);
         fabMenu.setClosedOnTouchOutside(true);
         com.github.clans.fab.FloatingActionButton fabNew = findViewById(R.id.fab_new);
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     //获取 Toolbar上的 menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu1, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -127,31 +127,32 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(cdntlayout, "DB is ready", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.menu_chat:
+                startActivity(new Intent(MainActivity.this, ChatActivity.class));
+                break;
             case R.id.menu_copylist:
                 copyList();
                 break;
-            case R.id.import_contact:
+            case R.id.menu_import_contact:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, 1);
                 } else {
-                    Intent intent = new Intent(MainActivity.this, ImportActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(MainActivity.this, ImportActivity.class));
                 }
                 break;
             case R.id.menu_about:
-                Intent intenta = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(intenta);
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             case R.id.menu_settings:
-                Intent intentset = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intentset);
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void urlIntentResolve() {
         Intent urlIntent = getIntent();
         if (urlIntent != null) {

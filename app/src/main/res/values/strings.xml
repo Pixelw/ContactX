@@ -36,6 +36,7 @@
     <string name="copyright" translatable="false">©2019 Pixel Inc.</string>
     <string name="mememe" translatable="false">by 苏立洋</string>
     <string name="about">About</string>
+    <string name="cancel">Cancel</string>
     <string name="deleteHint">Long press \'pencil\' button to delete</string>
     <string name="mygmail" translatable="false">sulycarl34@gmail.com</string>
     <string name="booyah" translatable="false">Booyah!</string>
@@ -63,4 +64,6 @@
     <string name="import_tutorial">Click the avatar to select</string>
     <string name="scan_qr">Scan QR Code</string>
     <string name="too_large">Data is too large,please shorten the detail.</string>
+    <string name="chat">Chat</string>
+    <string name="write_message">Write message</string>
 </resources>

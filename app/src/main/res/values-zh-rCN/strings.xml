@@ -52,4 +52,5 @@
     <string name="import_tutorial">点击头像后点击完成来导入</string>
     <string name="scan_qr">扫描二维码</string>
     <string name="too_large">数据太大，请缩减长度。</string>
+    <string name="cancel">取消</string>
 </resources>

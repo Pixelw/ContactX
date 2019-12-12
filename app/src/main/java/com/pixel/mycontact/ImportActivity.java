@@ -1,7 +1,6 @@
 package com.pixel.mycontact;
 
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.Menu;
@@ -50,7 +49,7 @@ public class ImportActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarImport);
         toolbar.setTitle(R.string.import_contact_from_system);
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

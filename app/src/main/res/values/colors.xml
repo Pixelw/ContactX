@@ -7,6 +7,7 @@
     <color name="colorSecondary">#3F51B5</color>
     <color name="colorSecondaryVariant">#7986CB</color>
     <color name="colorSurface">#ffffff</color>
+    <color name="colorSurfaceVariant">#f4f4f4</color>
 
     <style name="colorSurfaceDark">#fefefe</style>
 
@@ -18,6 +19,9 @@
     <color name="colorDarkSecondary">#03dac6</color>
     <color name="colorDarkSecondaryVariant">#018786</color>
     <color name="colorDarkOnSecondary">#000000</color>
+
+    <color name="colorDarkSurface">#202124</color>
+    <color name="colorDarkSurfaceVariant">#303134</color>
     <!--    common-->
     <color name="colorCommonGray">#cccccc</color>
     <color name="colorCommonWhite">#ffffff</color>

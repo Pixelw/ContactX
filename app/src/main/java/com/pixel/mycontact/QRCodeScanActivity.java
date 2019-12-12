@@ -2,11 +2,9 @@ package com.pixel.mycontact;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.Result;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
@@ -28,7 +25,6 @@ public class QRCodeScanActivity extends AppCompatActivity {
     private ZXingScannerView scannerView;
     private PeopleDB peopleDB;
     private People peopleFromQR;
-    private LinearLayout linearLayout;
 
     private ZXingScannerView.ResultHandler resultHandler = new ZXingScannerView.ResultHandler() {
         @Override
@@ -99,12 +95,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_scan);
-        linearLayout = findViewById(R.id.layout_qrscan);
 
         Toolbar toolbar = findViewById(R.id.toolbarScan);
         toolbar.setTitle(getString(R.string.scan_qr));
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,8 +119,23 @@ public class QRCodeScanActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initScanner();
             } else {
-                Snackbar.make(linearLayout, R.string.perde, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle(R.string.perde);
+                dialog.setMessage(R.string.error_action);
+                dialog.setCancelable(false);
+                dialog.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PermissionsUtils.hasOrRequestForCamera(QRCodeScanActivity.this, 10);
+                    }
+                });
+
+                dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
             }
         }
     }

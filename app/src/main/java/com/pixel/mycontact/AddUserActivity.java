@@ -2,7 +2,6 @@ package com.pixel.mycontact;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -147,7 +146,7 @@ public class AddUserActivity extends AppCompatActivity {
             toolbar.setTitle(R.string.createcontact);
         }
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), ((ColorDrawable) toolbar.getBackground()).getColor());
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
         //返回键
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

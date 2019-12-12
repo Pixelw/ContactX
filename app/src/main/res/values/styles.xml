@@ -10,10 +10,11 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorAccent">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorSecondaryVariant">@color/colorSurfaceVariant</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
-        <item name="toolbarStyle">@style/mToolbarTheme</item>
+        <!--        <item name="toolbarStyle">@style/mToolbarTheme</item>-->
         <item name="isLightTheme">true</item>
+        <!--        <item name="android:fitsSystemWindows">true</item>-->
     </style>
 
     <style name="mTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
@@ -33,8 +34,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="mToolbarTheme" parent="Widget.MaterialComponents.Toolbar">
-        <item name="android:background">?attr/colorSurface</item>
+    <style name="mToolbarTheme">
+        <item name="android:background">?attr/colorSecondaryVariant</item>
     </style>
 
     <style name="collToolbarTheme" parent="Widget.MaterialComponents.Toolbar">

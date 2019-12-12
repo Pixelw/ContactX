@@ -17,6 +17,7 @@
             android:id="@+id/toolbarAdd"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/mToolbarTheme"
             app:navigationIcon="@drawable/ic_close_black_24dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -261,7 +262,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="12dp"
-                            android:background="@drawable/rounded_rect"
+                            android:background="@drawable/shape_rounded_rect"
                             android:hint="@string/birthday"
                             android:padding="5dp" />
                     </LinearLayout>
