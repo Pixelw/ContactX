@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -74,6 +75,19 @@ public class ChatActivity extends AppCompatActivity {
         chatList = new ArrayList<>();
         chatAdapter = new ClassicChatAdapter(chatList);
         recyclerView.setAdapter(chatAdapter);
+
+        Toolbar toolbar = findViewById(R.id.toolbarChat);
+        toolbar.setTitle(R.string.chat);
+
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         ImageButton btn_send = findViewById(R.id.btn_chatSend);
 
