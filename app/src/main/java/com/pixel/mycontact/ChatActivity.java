@@ -1,149 +1,130 @@
 package com.pixel.mycontact;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.pixel.mycontact.adapter.ClassicChatAdapter;
+import com.pixel.mycontact.beans.IMMessage;
+import com.pixel.mycontact.net.ClientSocketCore;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private static final String CLOSE_TOKEN = "JBdKZ7g7sub8bP3";
-    private String targetIp;
-    private int port;
-    private EditText et_targetIp;
-    private EditText et_ChatInput;
-    //main socket
-    private Socket socket;
-    //need for listen
-    private InputStream inputStream;
-    private InputStreamReader inputStreamReader;
-    private BufferedReader bufferedReader;
-    //need for send
-    private OutputStream outputStream;
-    //TODO: 2019/12/11  线程池
-    private ExecutorService mThreadPool;
 
+    private static final int UPDATE_MSG = 10;
+    private EditText et_ChatInput;
+    private ClientSocketCore core;
+    private TextView tv_targetIP;
+    private EditText et_targetUser;
+    private Gson gson;
+    private String me = "";
+    private RecyclerView recyclerView;
+    private ClassicChatAdapter chatAdapter;
+    private Handler handler = new Handler() {
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case UPDATE_MSG:
+                    resolveMessage((String) message.obj);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private List<IMMessage> chatList;
+
+    private void resolveMessage(String obj) {
+        IMMessage imMessage = gson.fromJson(obj, IMMessage.class);
+        showNewMessage(imMessage);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        et_targetIp = findViewById(R.id.et_targetip);
+        gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd H:mm:ss")
+                .create();
+        tv_targetIP = findViewById(R.id.tv_targetip);
         et_ChatInput = findViewById(R.id.et_chatInput);
-        port = 9832;
+        et_targetUser = findViewById(R.id.et_targetUser);
+
+        recyclerView = findViewById(R.id.recyclerView_chat);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        chatList = new ArrayList<>();
+        chatAdapter = new ClassicChatAdapter(chatList);
+        recyclerView.setAdapter(chatAdapter);
 
         ImageButton btn_send = findViewById(R.id.btn_chatSend);
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userStr = et_targetUser.getText().toString();
                 String message = et_ChatInput.getText().toString();
-                sendMsgViaSocket(message);
+//                StringUtils.gzipString(message);
+                sendMsgObj(message, userStr);
                 et_ChatInput.setText("");
             }
         });
 
-        targetIp = et_targetIp.getText().toString();
-        mThreadPool = Executors.newCachedThreadPool();
-        createSocket();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String targetIp = preferences.getString("server_ip", getString(R.string.pixelw_design));
+        me = preferences.getString("nickname", "Unknown");
+        int port = Integer.valueOf(preferences.getString("server_port", "9999"));
+        String displayServer = targetIp + ":" + port;
+        tv_targetIP.setText(displayServer);
+
+        core = new ClientSocketCore(targetIp, port, handler, me);
 
     }
 
-    private void createSocket() {
-        mThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.d("onCreate:", "try connect " + targetIp + ":" + port);
-                    socket = new Socket(targetIp, port);
-                    Log.d("onCreate:", "isConnected=" + socket.isConnected());
-                    startListen();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    private void sendMsgObj(String msgBody, String targetUser) {
+
+        Date nowDate = new Date();
+        IMMessage imMessage = new IMMessage();
+        imMessage.setMsgBody(msgBody);
+        imMessage.setMsgTime(nowDate);
+        imMessage.setMsgDestination(targetUser);
+        imMessage.setMsgUser(me);
+        String strJson = gson.toJson(imMessage);
+        Log.d("Gson.toJson", strJson);
+
+        core.sendTextMessage(strJson);
+        showNewMessage(imMessage);
 
     }
 
-    private void startListen() {
-        mThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String receivedMsg;
-                    do {
-                        inputStream = socket.getInputStream();
-                        inputStreamReader = new InputStreamReader(inputStream);
-                        bufferedReader = new BufferedReader(inputStreamReader);
-                        receivedMsg = bufferedReader.readLine();
-                        Log.d("listen", "received:" + receivedMsg);
-                    } while (receiveMessage(receivedMsg));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private boolean receiveMessage(String msg) {
-        if (msg.equals(CLOSE_TOKEN)) {
-            return false;
-        } else {
-            System.out.println(msg);
-            return true;
-        }
-    }
-
-    //
-    private void showMessage(String msg) {
-
-    }
-
-    private void sendMsgViaSocket(final String message) {
-
-        mThreadPool.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    outputStream = socket.getOutputStream();
-                    outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
-                    outputStream.flush();
-                    if (message.equals(CLOSE_TOKEN)) {
-                        closeConnections();
-                    }
-                } catch (Exception e) {
-                    Log.e("send", "Error sending msg");
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
-    private void closeConnections() throws IOException {
-        outputStream.close();
-        bufferedReader.close();
-        socket.close();
+    private void showNewMessage(IMMessage imMessage) {
+        int position = chatAdapter.add(imMessage);
+        //滚动到最新消息
+        recyclerView.smoothScrollToPosition(position);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        sendMsgViaSocket(CLOSE_TOKEN);
+    protected void onDestroy() {
+        super.onDestroy();
+        core.close();
     }
+
 }

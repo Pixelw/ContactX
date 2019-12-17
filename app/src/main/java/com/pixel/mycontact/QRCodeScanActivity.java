@@ -15,7 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.zxing.Result;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
-import com.pixel.mycontact.utils.PeopleResolver;
+import com.pixel.mycontact.utils.PeopleUrl;
 import com.pixel.mycontact.utils.PermissionsUtils;
 import com.pixel.mycontact.utils.StyleUtils;
 
@@ -32,11 +32,11 @@ public class QRCodeScanActivity extends AppCompatActivity {
 //            scannerView.resumeCameraPreview(resultHandler);
             if (rawResult.getText().startsWith("pixel://mct?json")) {
                 Uri url = Uri.parse(rawResult.getText());
-                peopleFromQR = PeopleResolver.resolveJson(url.getQueryParameter("json"));
+                peopleFromQR = PeopleUrl.resolveJson(url.getQueryParameter("json"));
                 handleUrl();
             } else if (rawResult.getText().startsWith("pixel://mct?b64")) {
                 Uri url = Uri.parse(rawResult.getText());
-                peopleFromQR = PeopleResolver.resolveBase64Json(url.getQueryParameter("b64"));
+                peopleFromQR = PeopleUrl.resolveBase64Json(url.getQueryParameter("b64"));
                 handleUrl();
             } else {
                 AlertDialog.Builder invalidQr = new AlertDialog.Builder(QRCodeScanActivity.this);

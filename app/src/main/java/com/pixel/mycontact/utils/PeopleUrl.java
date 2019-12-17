@@ -1,16 +1,22 @@
 package com.pixel.mycontact.utils;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.pixel.mycontact.beans.People;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class PeopleResolver {
-    public static String urlHeader = "pixel://mct?";
-    public static String jsonQueryPara = "json=";
-    public static String b64QueryData = "b64=";
+public class PeopleUrl {
+
+    public static final int TYPE_FLAT_JSON = 1;
+    public static final int TYPE_B64 = 2;
+    public static final int TYPE_AES_PSK = 3;
+
+    public static final String URL_HEADER = "pixel://mct?";
+    public static final String JSON_QUERY_PARA = "json=";
+    public static final String B64_QUERY_PARA = "b64=";
 
     public static People resolveJson(String json) {
         People peopleFromJson;
@@ -43,5 +49,25 @@ public class PeopleResolver {
         return resolveJson(decoded);
     }
 
+    public static String generateUrl(People people, int format) {
+        String stringContent = "";
+        switch (format) {
+            case TYPE_FLAT_JSON:
+                stringContent = PeopleUrl.URL_HEADER + PeopleUrl.JSON_QUERY_PARA + people.toJSON();
+                break;
+            case TYPE_B64:
+                stringContent = PeopleUrl.URL_HEADER + PeopleUrl.B64_QUERY_PARA +
+                        Base64.encodeToString(people.toJSON().getBytes(), Base64.DEFAULT);
+                break;
+            case TYPE_AES_PSK:
+                Log.e("PeopleURL", "generateUrl: AES haven't implement yet");
+                break;
+            default:
+                break;
+
+        }
+        Log.d("generateQR: length", String.valueOf(stringContent.length()));
+        return stringContent;
+    }
 
 }

@@ -27,5 +27,26 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/chat_server">
+        <EditTextPreference
+            app:defaultValue="Pixel"
+            app:key="nickname"
+            app:title="@string/nick_name"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="pixelw.design"
+            app:key="server_ip"
+            app:title="@string/chat_server_ip"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="9832"
+            app:key="server_port"
+            app:title="@string/char_server_port"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
 
 </androidx.preference.PreferenceScreen>

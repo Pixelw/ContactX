@@ -1,4 +1,4 @@
-package com.pixel.mycontact;
+package com.pixel.mycontact.adapter;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pixel.mycontact.ContactDetailActivity;
+import com.pixel.mycontact.R;
 import com.pixel.mycontact.beans.People;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
     private List<People> mPeopleList;
     private List<People> checkedPeople = new ArrayList<>();
 
-    PeopleAdapter(List<People> peopleList) {
+    public PeopleAdapter(List<People> peopleList) {
         mPeopleList = peopleList;
     }
 

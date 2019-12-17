@@ -28,9 +28,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.snackbar.Snackbar;
+import com.pixel.mycontact.adapter.PeopleAdapter;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
-import com.pixel.mycontact.utils.PeopleResolver;
+import com.pixel.mycontact.utils.PeopleUrl;
 import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.ArrayList;
@@ -166,10 +167,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("uri", intentData.toString());
                     if (intentData.toString().startsWith("pixel://mct?json")) {
                         qrdata = intentData.getQueryParameter("json");
-                        peopleFromUrl = PeopleResolver.resolveJson(qrdata);
+                        peopleFromUrl = PeopleUrl.resolveJson(qrdata);
                     } else if (intentData.toString().startsWith("pixel://mct?b64")) {
                         qrdata = intentData.getQueryParameter("b64");
-                        peopleFromUrl = PeopleResolver.resolveBase64Json(qrdata);
+                        peopleFromUrl = PeopleUrl.resolveBase64Json(qrdata);
                     }
 
                     if (peopleFromUrl != null) {

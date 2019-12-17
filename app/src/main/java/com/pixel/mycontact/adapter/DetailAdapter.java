@@ -1,4 +1,4 @@
-package com.pixel.mycontact;
+package com.pixel.mycontact.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pixel.mycontact.R;
 import com.pixel.mycontact.beans.DetailList;
 
 import java.util.List;
@@ -19,19 +20,19 @@ import java.util.List;
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.mViewHolder> {
     private List<DetailList> listd;
 
-    DetailAdapter(List<DetailList> list) {
+    public DetailAdapter(List<DetailList> list) {
         listd = list;
     }
 
     @NonNull
-    public DetailAdapter.mViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public mViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_detaillist,
                 viewGroup, false);
         return new mViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DetailAdapter.mViewHolder mViewHolder, int i) {
+    public void onBindViewHolder(@NonNull mViewHolder mViewHolder, int i) {
         DetailList details = listd.get(i);
         mViewHolder.d1.setText(details.getD1());
         mViewHolder.hd.setImageResource(details.getImgSrc());

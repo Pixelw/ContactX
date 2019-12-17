@@ -66,4 +66,9 @@
     <string name="too_large">Data is too large,please shorten the detail.</string>
     <string name="chat">Chat</string>
     <string name="write_message">Write message</string>
+    <string name="chat_server">Chat Server</string>
+    <string name="chat_server_ip">Chat Server Address</string>
+    <string name="char_server_port">Chat Server Port</string>
+    <string name="pixelw_design" translatable="false">pixelw.design</string>
+    <string name="nick_name">Nickname</string>
 </resources>

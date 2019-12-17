@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,21 +26,17 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.sumimakito.awesomeqr.AwesomeQrRenderer;
-import com.github.sumimakito.awesomeqr.RenderResult;
-import com.github.sumimakito.awesomeqr.option.RenderOption;
-import com.github.sumimakito.awesomeqr.option.background.BlendBackground;
-import com.github.sumimakito.awesomeqr.option.color.Color;
-import com.github.sumimakito.awesomeqr.option.logo.Logo;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.pixel.mycontact.adapter.DetailAdapter;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
 import com.pixel.mycontact.daos.PeopleDB;
-import com.pixel.mycontact.utils.PeopleResolver;
+import com.pixel.mycontact.utils.PeopleUrl;
 import com.pixel.mycontact.utils.PermissionsUtils;
+import com.pixel.mycontact.utils.QRGenerator;
 import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.ArrayList;
@@ -66,84 +61,30 @@ public class ContactDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.shareContact) {
             Log.d("sharePeople", people.toJSON());
-            generateQR();
+            boolean isUsingBase64 = preferences.getBoolean("base64", false);
 
+            Bitmap bitmap = QRGenerator.generateQR(PeopleUrl.generateUrl(people, isUsingBase64 ? 2 : 1),
+                    BitmapFactory.decodeResource(getResources(), R.drawable.flat),
+                    BitmapFactory.decodeResource(getResources(), R.drawable.pixel));
+
+            if (bitmap != null) {
+                ImageView imgQRCode = new ImageView(getApplicationContext());
+                imgQRCode.setImageBitmap(bitmap);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
+                builder.setTitle(R.string.scanthis)
+                        .setView(imgQRCode)
+                        .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void generateQR() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.flat)
-                .copy(Bitmap.Config.ARGB_8888, true);
 
-
-        BlendBackground background = new BlendBackground();
-        background.setBitmap(bitmap);
-//        background.setClippingRect(new Rect(100, 100, 1400, 1400));
-        background.setAlpha(1.0f);
-        background.setBorderRadius(10);
-
-        Color color = new Color();
-        color.setLight(0xfff4f7f3);
-        color.setDark(0xff2e403a);
-        color.setAuto(false);
-
-        Logo logo = new Logo();
-        Bitmap bitmap1 = BitmapFactory.decodeResource
-                (getResources(), R.drawable.pixel)
-                .copy(Bitmap.Config.ARGB_8888, true);
-        logo.setBitmap(bitmap1);
-        logo.setBorderRadius(10); // radius for logo's corners
-        logo.setBorderWidth(10); // width of the border to be added around the logo
-        logo.setScale(0.2f); // scale for the logo in the QR code
-//        logo.setClippingRect(new Rect(0, 0, 200, 200)); // crop the logo image before applying it to the QR code
-        boolean isUsingBase64 = preferences.getBoolean("base64", false);
-
-        RenderOption renderOption = new RenderOption();
-        String stringContent;
-        if (isUsingBase64) {
-            stringContent = PeopleResolver.urlHeader + PeopleResolver.b64QueryData +
-                    Base64.encodeToString(people.toJSON().getBytes(), Base64.DEFAULT);
-            Log.d("base64", stringContent);
-            renderOption.setContent(stringContent);
-        } else {
-            stringContent = PeopleResolver.urlHeader + PeopleResolver.jsonQueryPara + people.toJSON();
-            renderOption.setContent(stringContent);
-        }
-        Log.d("generateQR: length", String.valueOf(stringContent.length()));
-        if (stringContent.length() >= 512) {
-            Snackbar.make(cdrLay, getString(R.string.too_large), Snackbar.LENGTH_SHORT).show();
-        } else {
-            renderOption.setSize(800);
-            renderOption.setBorderWidth(20);
-            renderOption.setRoundedPatterns(true);
-            renderOption.setPatternScale(0.5f);
-            renderOption.setColor(color);
-            renderOption.setBackground(background);
-            renderOption.setClearBorder(false);
-            renderOption.setLogo(logo);
-
-            try {
-                RenderResult renderResult = AwesomeQrRenderer.render(renderOption);
-                if (renderResult.getBitmap() != null) {
-                    ImageView imgQRCode = new ImageView(getApplicationContext());
-                    imgQRCode.setImageBitmap(renderResult.getBitmap());
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
-                    builder.setTitle(R.string.scanthis)
-                            .setView(imgQRCode)
-                            .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,8 +108,6 @@ public class ContactDetailActivity extends AppCompatActivity {
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
         StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
-//        StatusBarCompat.setStatusBarColorForCollapsingToolbar(this,appBarLayout,ctLayout,
-//                toolbar, android.graphics.Color.parseColor("#ffffff"));
         //初始化详细信息列表，并设置适配器
 
         initList();
