@@ -3,6 +3,8 @@ package com.pixel.mycontact.utils;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pixel.mycontact.beans.People;
 
 import org.json.JSONArray;
@@ -50,6 +52,9 @@ public class PeopleUrl {
     }
 
     public static String generateUrl(People people, int format) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
+                .create();
+
         String stringContent = "";
         switch (format) {
             case TYPE_FLAT_JSON:
