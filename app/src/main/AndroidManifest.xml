@@ -18,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <service
+            android:name=".services.ChatService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".ChatActivity"
             android:windowSoftInputMode="adjustResize" />

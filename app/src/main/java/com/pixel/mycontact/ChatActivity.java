@@ -1,8 +1,12 @@
 package com.pixel.mycontact;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pixel.mycontact.adapter.ClassicChatAdapter;
 import com.pixel.mycontact.beans.IMMessage;
-import com.pixel.mycontact.net.ClientSocketCore;
+import com.pixel.mycontact.services.ChatService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,8 +36,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final int UPDATE_MSG = 10;
     private EditText et_ChatInput;
-    private ClientSocketCore core;
-    private TextView tv_targetIP;
     private EditText et_targetUser;
     private Gson gson;
     private String me = "";
@@ -51,6 +53,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
     private List<IMMessage> chatList;
+    private ChatService.CommunicationBinder mBinder;
+    private String targetIp;
+    private int port;
 
     private void resolveMessage(String obj) {
         IMMessage imMessage = gson.fromJson(obj, IMMessage.class);
@@ -64,7 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd H:mm:ss")
                 .create();
-        tv_targetIP = findViewById(R.id.tv_targetip);
+        TextView tv_targetIP = findViewById(R.id.tv_targetip);
         et_ChatInput = findViewById(R.id.et_chatInput);
         et_targetUser = findViewById(R.id.et_targetUser);
 
@@ -103,13 +108,15 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String targetIp = preferences.getString("server_ip", getString(R.string.pixelw_design));
+        targetIp = preferences.getString("server_ip", getString(R.string.pixelw_design));
         me = preferences.getString("nickname", "Unknown");
-        int port = Integer.valueOf(preferences.getString("server_port", "9999"));
+        port = Integer.valueOf(preferences.getString("server_port", "9999"));
         String displayServer = targetIp + ":" + port;
         tv_targetIP.setText(displayServer);
 
-        core = new ClientSocketCore(targetIp, port, handler, me);
+
+        bindService(new Intent(getApplicationContext(), ChatService.class), connection, BIND_AUTO_CREATE);
+
 
     }
 
@@ -123,8 +130,7 @@ public class ChatActivity extends AppCompatActivity {
         imMessage.setMsgUser(me);
         String strJson = gson.toJson(imMessage);
         Log.d("Gson.toJson", strJson);
-
-        core.sendTextMessage(strJson);
+        mBinder.sendTextMsg(strJson);
         showNewMessage(imMessage);
 
     }
@@ -135,10 +141,23 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.smoothScrollToPosition(position);
     }
 
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBinder = (ChatService.CommunicationBinder) service;
+            mBinder.createSocket(targetIp, port, handler, me);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d("", "onServiceDisconnected: ");
+        }
+    };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        core.close();
+        unbindService(connection);
     }
 
 }
