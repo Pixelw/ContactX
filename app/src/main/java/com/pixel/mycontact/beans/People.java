@@ -119,31 +119,4 @@ public class People implements Serializable {
         selected = checked;
     }
 
-    public String toJSON() {
-        String adaptiveJson = "[{"
-                + "\"f\":\"" + f + '\"';
-        if (l.length() > 0) {
-            adaptiveJson += ",\"l\":\"" + l + '\"';
-        }
-        if (n1.length() > 0) {
-            adaptiveJson += ",\"n1\":\"" + n1 + '\"';
-        }
-        if (n2.length() > 0) {
-            adaptiveJson += ",\"n2\":\"" + n2 + '\"';
-        }
-        if (e.length() > 0) {
-            adaptiveJson += ",\"e\":\"" + e + '\"';
-        }
-        if (y != 0 || m != 0 || d != 0) {
-            adaptiveJson += ",\"y\":" + y + ",\"m\":" + m
-                    + ",\"d\":" + d;
-        }
-        if (no.length() > 0) {
-            adaptiveJson += ",\"no\":\"" + no + '\"';
-        }
-
-        adaptiveJson += "}]";
-
-        return adaptiveJson;
-    }
 }
