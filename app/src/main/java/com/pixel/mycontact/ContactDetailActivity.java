@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -172,7 +173,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (people.getEmail().equals("")) {
+                if (TextUtils.isEmpty(people.getEmail())) {
                     Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT)
                             .setAction(R.string.settings, new View.OnClickListener() {
                                 @Override
@@ -206,7 +207,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String[] item;
                 AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this);
-                if (people.getNumber2().equals("") || people.getNumber1().equals("")) {
+                if (TextUtils.isEmpty(people.getNumber2()) ||TextUtils.isEmpty( people.getNumber1())) {
                     item = new String[]{people.getNumber()};
                 } else {
                     item = new String[]{people.getNumber1(), people.getNumber2()};
@@ -240,7 +241,7 @@ public class ContactDetailActivity extends AppCompatActivity {
     private void callPeople() {
         final String[] item;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (people.getNumber2().equals("") || people.getNumber1().equals("")) {
+        if (TextUtils.isEmpty(people.getNumber2()) || TextUtils.isEmpty(people.getNumber1())) {
             item = new String[]{people.getNumber()};
         } else {
             item = new String[]{people.getNumber1(), people.getNumber2()};
@@ -283,15 +284,15 @@ public class ContactDetailActivity extends AppCompatActivity {
     //生成详细信息的列表
     private void initList() {
         details = new ArrayList<>();
-        if (!people.getNumber1().equals("")) {
+        if (!TextUtils.isEmpty(people.getNumber1() )) {
             DetailList phone = new DetailList(getString(R.string.phone_number), R.drawable.ic_phone_iphone_black_24dp, people.getNumber1());
             details.add(phone);
         }
-        if (!people.getNumber2().equals("")) {
+        if (!TextUtils.isEmpty(people.getNumber2())) {
             DetailList tele = new DetailList(getString(R.string.phone_number), R.drawable.ic_phone_black_24dp, people.getNumber2());
             details.add(tele);
         }
-        if (!people.getEmail().equals("")) {
+        if (!TextUtils.isEmpty(people.getEmail())) {
             DetailList email = new DetailList(getString(R.string.email_address), R.drawable.ic_email_black_24dp, people.getEmail());
             details.add(email);
         }
@@ -299,7 +300,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             DetailList birth = new DetailList(getString(R.string.birthday), R.drawable.ic_date_range_black_24dp, people.getBirthMonth() + "/" + people.getBirthDay());
             details.add(birth);
         }
-        if (!people.getNote().equals("")) {
+        if (!TextUtils.isEmpty(people.getNote())) {
             DetailList note = new DetailList(getString(R.string.notes), R.drawable.ic_format_list_bulleted_black_24dp, people.getNote());
             details.add(note);
         }

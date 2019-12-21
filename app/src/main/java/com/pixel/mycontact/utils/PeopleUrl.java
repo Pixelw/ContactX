@@ -21,17 +21,18 @@ public class PeopleUrl {
     public static final String JSON_QUERY_PARA = "json=";
     public static final String B64_QUERY_PARA = "b64=";
 
+    private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
+
     public static People deserializePeopleObj(String json) {
-        People people = null;
+        People people;
         try {
-            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
-                    .create();
             people= gson.fromJson(json,People.class);
         }catch (Exception e){
             e.printStackTrace();
             return null;
         }
-
         return people;
     }
 
@@ -60,8 +61,6 @@ public class PeopleUrl {
     }
 
     public static String generateUrl(People people, int format) {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
-                .create();
         String jsonPeople = gson.toJson(people);
         LogUtil.d("GsonPeople",jsonPeople);
         String stringContent = "";

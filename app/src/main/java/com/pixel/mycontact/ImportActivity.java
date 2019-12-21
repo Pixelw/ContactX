@@ -83,8 +83,8 @@ public class ImportActivity extends AppCompatActivity {
                             (ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String number = cursor.getString(cursor.getColumnIndex
                             (ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    People people = new People(name, "", number, "", "",
-                            0, 0, 0, "Imported", -139);
+                    People people = new People(name, null, number, null, null,
+                            0, 0, 0, null, -139);
                     sysConList.add(people);
                 }
             }
