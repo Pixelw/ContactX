@@ -39,10 +39,10 @@ public class StringUtils {
             }
         }
         byte[] byteArray = out.toByteArray();
-        Log.d("StringGzip", "String size before gzip:"
+        LogUtil.d("StringGzip", "String size before gzip:"
                 + str.getBytes().length +
                 ", String gzipped:" + byteArray.length);
-        Log.d("unzip", unGzipToString(byteArray));
+        LogUtil.d("unzip", unGzipToString(byteArray));
         return byteArray;
     }
 

@@ -1,7 +1,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_scan_black_24dp"
+        android:icon="@drawable/ic_scan_white_24dp"
         android:shortcutDisabledMessage="@string/no_contact"
         android:shortcutId="scanQR"
         android:shortcutLongLabel="@string/scan_qr"

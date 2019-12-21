@@ -54,6 +54,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
     public void onBindViewHolder(@NonNull final mViewHolder mViewHolder, int i) {
         final People people = mPeopleList.get(i);
         mViewHolder.name.setText(people.getName());
+        people.isSelected(false);
         mViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
 
             @Override

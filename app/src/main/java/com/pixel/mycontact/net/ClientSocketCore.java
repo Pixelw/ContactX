@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.pixel.mycontact.utils.LogUtil;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,9 +52,9 @@ public class ClientSocketCore {
             @Override
             public void run() {
                 try {
-                    Log.d("onCreate:", "try connect " + serverIp + ":" + port);
+                    LogUtil.d("onCreate:", "try connect " + serverIp + ":" + port);
                     socket = new Socket(serverIp, port);
-                    Log.d("onCreate:", "isConnected=" + socket.isConnected());
+                    LogUtil.d("onCreate:", "isConnected=" + socket.isConnected());
                     hello();
                     startListen();
                 } catch (IOException e) {
@@ -77,7 +79,7 @@ public class ClientSocketCore {
                         inputStreamReader = new InputStreamReader(inputStream);
                         bufferedReader = new BufferedReader(inputStreamReader);
                         receivedMsg = bufferedReader.readLine();
-                        Log.d("listen", "received:" + receivedMsg);
+                        LogUtil.d("listen", "received:" + receivedMsg);
                     } while (receiveMessage(receivedMsg));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -102,7 +104,7 @@ public class ClientSocketCore {
             outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
         } catch (Exception e) {
-            Log.e("send", "Error sending msg");
+            LogUtil.e("send", "Error sending msg");
             e.printStackTrace();
         }
     }

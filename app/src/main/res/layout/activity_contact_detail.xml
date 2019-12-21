@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
@@ -30,21 +31,13 @@
                 android:src="@drawable/de1k"
                 app:layout_collapseMode="parallax" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <!--                <View-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="@android:"-->
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:theme="@style/collToolbarTheme"
+                    style="@style/collToolbarTheme"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_arrow_back_black_24dp" />
-            </LinearLayout>
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -58,7 +51,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_edit_black_24dp"
-        android:tint="@color/colorCommonWhite"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
 

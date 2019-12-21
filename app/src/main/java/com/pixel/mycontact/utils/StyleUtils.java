@@ -31,7 +31,7 @@ public class StyleUtils {
         float luminanceOfToolbar = (float) ((0.2126 * Color.red(colorOfToolbar))
                 + (0.7152 * Color.green(colorOfToolbar))
                 + (0.0722 * Color.blue(colorOfToolbar)));
-        Log.d("luminance:", String.valueOf(luminanceOfToolbar));
+        LogUtil.d("luminance:", String.valueOf(luminanceOfToolbar));
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                 | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);

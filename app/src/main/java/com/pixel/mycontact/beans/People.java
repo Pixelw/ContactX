@@ -1,5 +1,7 @@
 package com.pixel.mycontact.beans;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 /*
@@ -19,7 +21,8 @@ public class People implements Serializable {
     private int m;
     private int d;
     private String no;
-    private Boolean selected = false;
+    @Expose(deserialize = false, serialize = false)
+    private Boolean selected;
 
     public People(String firstName, String lastName, String number1, String number2, String email,
                   int birthYear, int birthMonth, int birthDay, String note, int id) {

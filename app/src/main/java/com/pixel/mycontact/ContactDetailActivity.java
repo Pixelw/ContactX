@@ -60,7 +60,6 @@ public class ContactDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.shareContact) {
-            Log.d("sharePeople", people.toJSON());
             boolean isUsingBase64 = preferences.getBoolean("base64", false);
 
             Bitmap bitmap = QRGenerator.generateQR(PeopleUrl.generateUrl(people, isUsingBase64 ? 2 : 1),

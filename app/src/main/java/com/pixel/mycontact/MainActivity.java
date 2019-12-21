@@ -4,10 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         Toolbar toolbar = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
-        StyleUtils.setStatusBarTransparent(getWindow(), toolbar, false);
-//        StatusBarCompat.translucentStatusBar(this,true);
+        StyleUtils.setStatusBarTransparent(getWindow(), toolbar,false);
         FloatingActionMenu fabMenu = findViewById(R.id.fab_menu);
         fabMenu.setClosedOnTouchOutside(true);
         com.github.clans.fab.FloatingActionButton fabNew = findViewById(R.id.fab_new);
         com.github.clans.fab.FloatingActionButton fabScan = findViewById(R.id.fab_scan);
+        fabMenu.setIconTint(getResources().getColor(R.color.colorCommonWhite));
         //创建联系人入口（悬浮按钮）
         fabNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,18 +158,10 @@ public class MainActivity extends AppCompatActivity {
             String intentAction = urlIntent.getAction();
 
             if (Intent.ACTION_VIEW.equals(intentAction)) {
-                Uri intentData = urlIntent.getData();
-                String qrdata;
-                People peopleFromUrl = null;
-                if (intentData != null) {
-                    Log.d("uri", intentData.toString());
-                    if (intentData.toString().startsWith("pixel://mct?json")) {
-                        qrdata = intentData.getQueryParameter("json");
-                        peopleFromUrl = PeopleUrl.resolveJson(qrdata);
-                    } else if (intentData.toString().startsWith("pixel://mct?b64")) {
-                        qrdata = intentData.getQueryParameter("b64");
-                        peopleFromUrl = PeopleUrl.resolveBase64Json(qrdata);
-                    }
+                String string = urlIntent.getDataString();
+                People peopleFromUrl;
+                if (string != null) {
+                    peopleFromUrl = PeopleUrl.parseUrl(string);
 
                     if (peopleFromUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);

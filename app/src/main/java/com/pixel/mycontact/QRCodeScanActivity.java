@@ -24,20 +24,14 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class QRCodeScanActivity extends AppCompatActivity {
     private ZXingScannerView scannerView;
     private PeopleDB peopleDB;
-    private People peopleFromQR;
 
     private ZXingScannerView.ResultHandler resultHandler = new ZXingScannerView.ResultHandler() {
         @Override
         public void handleResult(Result rawResult) {
 //            scannerView.resumeCameraPreview(resultHandler);
-            if (rawResult.getText().startsWith("pixel://mct?json")) {
-                Uri url = Uri.parse(rawResult.getText());
-                peopleFromQR = PeopleUrl.resolveJson(url.getQueryParameter("json"));
-                handleUrl();
-            } else if (rawResult.getText().startsWith("pixel://mct?b64")) {
-                Uri url = Uri.parse(rawResult.getText());
-                peopleFromQR = PeopleUrl.resolveBase64Json(url.getQueryParameter("b64"));
-                handleUrl();
+            People peopleFromQR = PeopleUrl.parseUrl(rawResult.toString());
+             if (peopleFromQR !=null) {
+                handleUrl(peopleFromQR);
             } else {
                 AlertDialog.Builder invalidQr = new AlertDialog.Builder(QRCodeScanActivity.this);
                 invalidQr.setTitle(R.string.invalidqr)
@@ -60,15 +54,15 @@ public class QRCodeScanActivity extends AppCompatActivity {
         }
     };
 
-    private void handleUrl() {
-        if (peopleFromQR != null) {
+    private void handleUrl(final People people) {
+        if (people != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(QRCodeScanActivity.this);
             builder.setTitle(R.string.foundcontact)
-                    .setMessage(getString(R.string.addthis) + "\n" + peopleFromQR.getName())
+                    .setMessage(getString(R.string.addthis) + "\n" + people.getName())
                     .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (peopleDB.insertContact(peopleFromQR) > 0) {
+                            if (peopleDB.insertContact(people) > 0) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
                                 finish();
                             }

@@ -21,14 +21,15 @@
             android:layout_marginTop="3dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="3dp"
-            app:cardCornerRadius="3dp"
-            app:elevation="5dp">
+            android:background="@color/colorSurface"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarMain"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:theme="@style/mToolbarTheme" />
+                style="@style/mToolbarTheme" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -53,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        fab:menu_colorNormal="?android:attr/colorAccent"
-        fab:menu_colorPressed="?android:attr/colorAccent"
+        fab:menu_colorNormal="?attr/colorSecondary"
+        fab:menu_colorPressed="?attr/colorSecondary"
         app:menu_icon="@drawable/ic_add_black_24dp"
         app:menu_labels_ellipsize="end"
         app:menu_labels_singleLine="true">
@@ -66,16 +67,16 @@
             android:src="@drawable/ic_playlist_add_black_24dp"
             fab:fab_label="@string/createcontact"
             fab:fab_size="mini"
-            fab:menu_colorNormal="?attr/colorAccent"
-            fab:menu_colorPressed="?attr/colorAccent" />
+            fab:menu_colorNormal="?attr/colorSecondary"
+            fab:menu_colorPressed="?attr/colorSecondary" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_scan_white_24dp"
-            fab:menu_colorNormal="?android:attr/colorAccent"
-            fab:menu_colorPressed="?android:attr/colorAccent"
+            fab:menu_colorNormal="?attr/colorSecondary"
+            fab:menu_colorPressed="?attr/colorSecondary"
             app:fab_label="@string/scan_qr"
             app:fab_size="mini" />
 

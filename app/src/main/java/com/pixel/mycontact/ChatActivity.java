@@ -26,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.pixel.mycontact.adapter.ClassicChatAdapter;
 import com.pixel.mycontact.beans.IMMessage;
 import com.pixel.mycontact.services.ChatService;
+import com.pixel.mycontact.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,7 +94,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
         ImageButton btn_send = findViewById(R.id.btn_chatSend);
 
         btn_send.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +101,6 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String userStr = et_targetUser.getText().toString();
                 String message = et_ChatInput.getText().toString();
-//                StringUtils.gzipString(message);
                 sendMsgObj(message, userStr);
                 et_ChatInput.setText("");
             }
@@ -114,9 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         String displayServer = targetIp + ":" + port;
         tv_targetIP.setText(displayServer);
 
-
         bindService(new Intent(getApplicationContext(), ChatService.class), connection, BIND_AUTO_CREATE);
-
 
     }
 
@@ -128,8 +125,9 @@ public class ChatActivity extends AppCompatActivity {
         imMessage.setMsgTime(nowDate);
         imMessage.setMsgDestination(targetUser);
         imMessage.setMsgUser(me);
+        //gson 序列化
         String strJson = gson.toJson(imMessage);
-        Log.d("Gson.toJson", strJson);
+        LogUtil.d("Gson.toJson", strJson);
         mBinder.sendTextMsg(strJson);
         showNewMessage(imMessage);
 
@@ -150,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d("", "onServiceDisconnected: ");
+            LogUtil.d("", "onServiceDisconnected: ");
         }
     };
 
