@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,6 +107,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
         StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
+        StyleUtils.setStatusBarLightModeM(getWindow());
         //初始化详细信息列表，并设置适配器
 
         initList();

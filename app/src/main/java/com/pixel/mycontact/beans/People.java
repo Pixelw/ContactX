@@ -3,6 +3,8 @@ package com.pixel.mycontact.beans;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.Expose;
+import com.pixel.mycontact.utils.HashUtil;
+import com.pixel.mycontact.utils.StringUtils;
 
 import java.io.Serializable;
 
@@ -33,7 +35,21 @@ public class People implements Serializable {
     private int d;
     @Expose
     private String no;
+
+
     private Boolean selected;
+    private String status;
+    private String crc32;
+    private String displayMsg;
+    private int unreadMsg = 0;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public People(String firstName, String lastName, String number1, String number2, String email,
                   int birthYear, int birthMonth, int birthDay, String note, int id) {
@@ -91,9 +107,9 @@ public class People implements Serializable {
     public String getNumber() {
 //   返回一个号码，有两个优先返回1，没有返回"unknown"
         if (!TextUtils.isEmpty(n1)) {
-            return n1;
+            return StringUtils.getTrimmedNumber(n1);
         } else if (!TextUtils.isEmpty(n2)) {
-            return n2;
+            return StringUtils.getTrimmedNumber(n2);
         } else {
             return "unknown";
         }
@@ -132,4 +148,36 @@ public class People implements Serializable {
         selected = checked;
     }
 
+    public String getCrc32() {
+        if (!getNumber().equals("unknown")) {
+            if (TextUtils.isEmpty(crc32)) {
+                String s = HashUtil.toCrc32(getNumber().getBytes());
+                setCrc32(s);
+                return s;
+            } else {
+                return crc32;
+            }
+        }
+        return null;
+    }
+
+    private void setCrc32(String crc32) {
+        this.crc32 = crc32;
+    }
+
+    public String getDisplayMsg() {
+        return displayMsg;
+    }
+
+    public void setDisplayMsg(String displayMsg) {
+        this.displayMsg = displayMsg;
+    }
+
+    public int getUnreadMsg() {
+        return unreadMsg;
+    }
+
+    public void addUnreadMsg(){
+        this.unreadMsg++;
+    }
 }

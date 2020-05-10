@@ -23,6 +23,6 @@
     <color name="colorDarkSurface">#202124</color>
     <color name="colorDarkSurfaceVariant">#303134</color>
     <!--    common-->
-    <color name="colorCommonGray">#cccccc</color>
+    <color name="colorCommonGray">#e0e0e0</color>
     <color name="colorCommonWhite">#ffffff</color>
 </resources>

@@ -2,14 +2,10 @@ package com.pixel.mycontact.utils;
 
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.zxing.client.result.URLTOResultParser;
 import com.pixel.mycontact.beans.People;
-
-import java.net.URL;
 
 public class PeopleUrl {
 
@@ -24,6 +20,7 @@ public class PeopleUrl {
     private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
             .excludeFieldsWithoutExposeAnnotation()
             .create();
+
 
     public static People deserializePeopleObj(String json) {
         People people;
@@ -73,7 +70,7 @@ public class PeopleUrl {
                         Base64.encodeToString(jsonPeople.getBytes(), Base64.DEFAULT);
                 break;
             case TYPE_AES_PSK:
-                Log.e("PeopleURL", "generateUrl: AES haven't implement yet");
+                LogUtil.e("PeopleURL", "generateUrl: AES haven't implement yet");
                 break;
             default:
                 break;

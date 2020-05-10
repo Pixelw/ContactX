@@ -58,4 +58,7 @@
     <string name="char_server_port">服务器端口</string>
     <string name="chat">聊天</string>
     <string name="chat_server">聊天服务器</string>
+    <string name="nick_name">昵称</string>
+    <string name="me">我</string>
+    <string name="your_info">您的信息将被转为虚拟标识，并用于与您的朋友匹配。</string>
 </resources>

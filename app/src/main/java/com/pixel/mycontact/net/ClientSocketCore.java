@@ -1,7 +1,5 @@
 package com.pixel.mycontact.net;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.pixel.mycontact.utils.LogUtil;
@@ -22,8 +20,11 @@ import java.util.concurrent.Executors;
  */
 public class ClientSocketCore {
 
-    private static final String CLOSE_TOKEN = "JBdKZ7g7sub8bP3";
-    private static final int UPDATE_MSG = 10;
+
+    public static final String CLOSE_TOKEN = "JBdKZ7g7sub8bP3";
+
+    private ClientListener clientListener;
+
     private String serverIp;
     private int port;
     private String userID;
@@ -36,18 +37,17 @@ public class ClientSocketCore {
     //need for send
     private OutputStream outputStream;
     private ExecutorService mThreadPool;
-    private android.os.Handler mHandler;
+    private boolean connected = false;
 
-    public ClientSocketCore(String serverIp, int port, Handler handler, String userID) {
+    public ClientSocketCore(String serverIp, int port, ClientListener listener) {
         this.serverIp = serverIp;
         this.port = port;
-        this.mHandler = handler;
         this.userID = userID;
         mThreadPool = Executors.newCachedThreadPool();
-        createSocket();
+        clientListener = listener;
     }
 
-    private void createSocket() {
+    public void connect() {
         mThreadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -55,7 +55,6 @@ public class ClientSocketCore {
                     LogUtil.d("onCreate:", "try connect " + serverIp + ":" + port);
                     socket = new Socket(serverIp, port);
                     LogUtil.d("onCreate:", "isConnected=" + socket.isConnected());
-                    hello();
                     startListen();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -64,11 +63,9 @@ public class ClientSocketCore {
         });
     }
 
-    private void hello() {
-        sendMsgViaSocket("Iam:" + userID);
-    }
-
     private void startListen() {
+        clientListener.onOpen(this,socket);
+        connected = true;
         mThreadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -79,7 +76,6 @@ public class ClientSocketCore {
                         inputStreamReader = new InputStreamReader(inputStream);
                         bufferedReader = new BufferedReader(inputStreamReader);
                         receivedMsg = bufferedReader.readLine();
-                        LogUtil.d("listen", "received:" + receivedMsg);
                     } while (receiveMessage(receivedMsg));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -89,42 +85,13 @@ public class ClientSocketCore {
     }
 
     private boolean receiveMessage(String msg) {
-        Message message = new Message();
-        message.what = UPDATE_MSG;
-        message.obj = msg;
-        mHandler.sendMessage(message);
-        return !msg.equals(CLOSE_TOKEN);
-    }
-
-
-    //todo 线程问题
-    public void sendMsgViaSocket(final String message) {
-        try {
-            outputStream = socket.getOutputStream();
-            outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();
-        } catch (Exception e) {
-            LogUtil.e("send", "Error sending msg");
-            e.printStackTrace();
+        if (msg != null && msg.equals(CLOSE_TOKEN)){
+            clientListener.onServerClosed(this);
+            connected = false;
+            return false;
         }
-    }
-
-    public void close() {
-        if (socket != null && socket.isConnected()) {
-            mThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    sendMsgViaSocket(CLOSE_TOKEN);
-                    try {
-                        closeConnections();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-        }
-
+        clientListener.onMessage(this,socket,msg);
+        return true;
     }
 
     public void sendTextMessage(final String textMessage) {
@@ -136,10 +103,45 @@ public class ClientSocketCore {
         });
     }
 
+    private void sendMsgViaSocket(final String message) {
+        try {
+            Log.v("sending: ", message);
+            outputStream = socket.getOutputStream();
+            outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+        } catch (Exception e) {
+            LogUtil.e("send", "Error sending msg");
+            e.printStackTrace();
+        }
+    }
+
+
+    public void close() {
+        if (socket != null && socket.isConnected()) {
+            mThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    sendMsgViaSocket(CLOSE_TOKEN);
+                    clientListener.onDisconnect(ClientSocketCore.this,socket);
+                    connected = false;
+                    try {
+                        closeConnections();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    public boolean isConnected(){
+        return connected;
+    }
 
     private void closeConnections() throws IOException {
         outputStream.close();
         bufferedReader.close();
         socket.close();
     }
+
 }

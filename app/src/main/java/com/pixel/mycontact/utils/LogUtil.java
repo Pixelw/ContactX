@@ -13,6 +13,8 @@ public class LogUtil {
     public static final int WARN = 4;
     public static final int ERROR = 5;
     public static final int NOTHING = 6;
+
+    //set project logging level here
     public static int level = DEBUG;
 
 

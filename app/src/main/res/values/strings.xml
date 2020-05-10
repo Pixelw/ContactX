@@ -71,4 +71,8 @@
     <string name="char_server_port">Chat Server Port</string>
     <string name="pixelw_design" translatable="false">pixelw.design</string>
     <string name="nick_name">Nickname</string>
+    <string name="me">Me</string>
+    <string name="your_info">Your information will be transcode into a signature and used to match with your friends.</string>
+    <string name="online">online</string>
+    <string name="noinfo">Personal information not set, we need these to identify you.</string>
 </resources>

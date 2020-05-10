@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
  * @author Carl Su
  * @date 2019/11/26
  */
+@SuppressWarnings("ALL")
 public class StyleUtils {
     /**
      * 自适应状态栏透明

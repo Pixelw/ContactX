@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import com.pixel.mycontact.adapter.ClassicChatAdapter;
 import com.pixel.mycontact.beans.IMMessage;
 import com.pixel.mycontact.services.ChatService;
@@ -35,33 +34,32 @@ import java.util.List;
 public class ChatActivity extends AppCompatActivity {
 
 
-    private static final int UPDATE_MSG = 10;
+    public static final int UPDATE_MSG = 10;
     private EditText et_ChatInput;
     private EditText et_targetUser;
     private Gson gson;
-    private String me = "";
+    private String me = "";  //user itself
     private RecyclerView recyclerView;
     private ClassicChatAdapter chatAdapter;
-    private Handler handler = new Handler() {
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case UPDATE_MSG:
-                    resolveMessage((String) message.obj);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+
+    //receive incoming message from ClientSocketCore with handler
     private List<IMMessage> chatList;
     private ChatService.CommunicationBinder mBinder;
     private String targetIp;
     private int port;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBinder = (ChatService.CommunicationBinder) service;
+            //todo remake msg handling
+//            mBinder.createSocket(targetIp, port, handler, me);
+        }
 
-    private void resolveMessage(String obj) {
-        IMMessage imMessage = gson.fromJson(obj, IMMessage.class);
-        showNewMessage(imMessage);
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            LogUtil.d("", "onServiceDisconnected: ");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,19 +115,14 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void sendMsgObj(String msgBody, String targetUser) {
-
-        Date nowDate = new Date();
-        IMMessage imMessage = new IMMessage();
-        imMessage.setMsgBody(msgBody);
-        imMessage.setMsgTime(nowDate);
-        imMessage.setMsgDestination(targetUser);
-        imMessage.setMsgUser(me);
-        //gson 序列化
-        String strJson = gson.toJson(imMessage);
-        LogUtil.d("Gson.toJson", strJson);
-        mBinder.sendTextMsg(strJson);
-        showNewMessage(imMessage);
+    private void resolveMessage(String obj) {
+        IMMessage imMessage = null;
+        try {
+            imMessage = gson.fromJson(obj, IMMessage.class);
+            showNewMessage(imMessage);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -139,18 +132,19 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.smoothScrollToPosition(position);
     }
 
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mBinder = (ChatService.CommunicationBinder) service;
-            mBinder.createSocket(targetIp, port, handler, me);
-        }
+    private void sendMsgObj(String msgBody, String targetUser) {
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            LogUtil.d("", "onServiceDisconnected: ");
-        }
-    };
+        Date nowDate = new Date();
+        IMMessage imMessage = new IMMessage();
+        imMessage.setMsgBody(msgBody);
+        imMessage.setMsgTime(nowDate);
+        imMessage.setMsgDestination(targetUser);
+        imMessage.setMsgUser(me);
+        //gson 序列化
+        JsonElement msgElement = gson.toJsonTree(imMessage, IMMessage.class);
+        mBinder.sendJsonMsg("chatMsg", msgElement);
+        showNewMessage(imMessage);
+    }
 
     @Override
     protected void onDestroy() {

@@ -1,10 +1,10 @@
 package com.pixel.mycontact.utils;
 
-import android.util.Log;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -79,4 +79,10 @@ public class StringUtils {
         return string;
     }
 
+    public static String getTrimmedNumber(String string){
+        String regEx = "[^0-9]";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(string);
+        return matcher.replaceAll("").trim();
+    }
 }

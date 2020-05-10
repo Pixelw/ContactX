@@ -66,7 +66,7 @@ public class ImportActivity extends AppCompatActivity {
         readAllSystemContacts();
 
         peopleDB = new PeopleDB(ImportActivity.this);
-        adapter = new PeopleAdapter(sysConList);
+        adapter = new PeopleAdapter(sysConList,this);
         recyclerView.setAdapter(adapter);
         Toast.makeText(ImportActivity.this, getString(R.string.import_tutorial), Toast.LENGTH_LONG).show();
     }
