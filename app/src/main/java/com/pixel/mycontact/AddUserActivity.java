@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.Calendar;
@@ -38,7 +38,24 @@ public class AddUserActivity extends AppCompatActivity {
     private int nowMonth;
     private int nowDay;
 
-    private PeopleDB peopleDB;
+    //    private PeopleDB peopleDB;
+    private RealmTransactions realmTransactions;
+
+    private RealmTransactions.Callback callback = new RealmTransactions.Callback() {
+        @Override
+        public void onSuccess() {
+            Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        @Override
+        public void onFailed(String reason) {
+            Toast.makeText(AddUserActivity.this, R.string.failed,
+                    Toast.LENGTH_SHORT).show();
+        }
+    };
+
     private People people;
 
     private boolean isModify = false;
@@ -67,16 +84,11 @@ public class AddUserActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        peopleDB.closeDB();
+//        peopleDB.closeDB();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = -39;//id 缺省值，不写入数据库
-        //判断是否为修改模式，是修改模式的话id沿用数据库的id，方便数据库识别；
-        if (isModify) {
-            id = people.getId();
-        }
         if (item.getItemId() == R.id.accept) {
             People savePeople = new People(
                     nameText.getEditText().getText().toString(),
@@ -85,10 +97,11 @@ public class AddUserActivity extends AppCompatActivity {
                     num2Text.getEditText().getText().toString(),
                     emailText.getEditText().getText().toString(),
                     birthYear, birthMonth, birthDay,
-                    noteAdd.getEditText().getText().toString(),
-                    id
+                    noteAdd.getEditText().getText().toString()
             );
-
+            if (isModify){
+                savePeople.setUuid(people.getUuid());
+            }
             String emailInput = emailText.getEditText().getText().toString();
             if (TextUtils.isEmpty(nameText.getEditText().getText().toString())) {//判断至少填写一个电话一个姓名
                 nameText.setErrorEnabled(true);
@@ -102,19 +115,9 @@ public class AddUserActivity extends AppCompatActivity {
                 emailText.setError(getString(R.string.invalid_email));
             } else {
                 if (isModify) {//修改模式，调用update方法
-
-                    if (peopleDB.updateContact(savePeople) > 0) {
-                        Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
-                                Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
+                    realmTransactions.updateContact(savePeople, callback);
                 } else {//创建模式，调用insert方法；
-                    if (peopleDB.insertContact(savePeople) > 0) {
-                        Toast.makeText(AddUserActivity.this, getString(R.string.contactsave),
-                                Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                    realmTransactions.insertAContact(savePeople, callback);
                 }
             }
         }
@@ -125,6 +128,7 @@ public class AddUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
         setContentView(R.layout.activity_add_user);
         Toolbar toolbar = findViewById(R.id.toolbarAdd);
         nameText = findViewById(R.id.nameAdd);
@@ -154,7 +158,7 @@ public class AddUserActivity extends AppCompatActivity {
                 finish();
             }
         });
-        peopleDB = new PeopleDB(AddUserActivity.this);
+//        peopleDB = new PeopleDB(AddUserActivity.this);
         //初始化日历，获取现在日期；
         final Calendar calendar = Calendar.getInstance();
         nowYear = calendar.get(Calendar.YEAR);
@@ -165,7 +169,7 @@ public class AddUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(AddUserActivity.this, onDateSetListener,
-                        calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -183,7 +187,7 @@ public class AddUserActivity extends AppCompatActivity {
             nowDay = people.getBirthDay();
             nowMonth = people.getBirthMonth();
             nowYear = people.getBirthYear();
-            String dateStr = String.format("%d/%d/%d",people.getBirthYear(),people.getBirthMonth(),people.getBirthDay());
+            String dateStr = String.format("%d/%d/%d", people.getBirthYear(), people.getBirthMonth(), people.getBirthDay());
             dateAdd.setText(dateStr);
         }
     }

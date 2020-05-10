@@ -75,4 +75,6 @@
     <string name="your_info">Your information will be transcode into a signature and used to match with your friends.</string>
     <string name="online">online</string>
     <string name="noinfo">Personal information not set, we need these to identify you.</string>
+    <string name="failed">failed..</string>
+    <string name="imported">Imported</string>
 </resources>

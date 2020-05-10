@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pixel.mycontact.adapter.PeopleAdapter;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.utils.StyleUtils;
 
 import java.util.ArrayList;
@@ -23,7 +23,8 @@ import java.util.List;
 
 public class ImportActivity extends AppCompatActivity {
 
-    private PeopleDB peopleDB;
+//    private PeopleDB peopleDB;
+    private RealmTransactions realmTransactions;
     private List<People> sysConList;
     private PeopleAdapter adapter;
 
@@ -35,10 +36,18 @@ public class ImportActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.accept) {
-            if (peopleDB.insertSysContacts(adapter.getCheckedPeople()) > 0) {
-                Toast.makeText(ImportActivity.this, "Imported", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            realmTransactions.insertContacts(adapter.getCheckedPeople(), new RealmTransactions.Callback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(ImportActivity.this, R.string.imported, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailed(String reason) {
+                    Toast.makeText(ImportActivity.this, R.string.failed, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         return super.onOptionsItemSelected(item);
     }
@@ -65,7 +74,9 @@ public class ImportActivity extends AppCompatActivity {
 
         readAllSystemContacts();
 
-        peopleDB = new PeopleDB(ImportActivity.this);
+//        peopleDB = new PeopleDB(ImportActivity.this);
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
+
         adapter = new PeopleAdapter(sysConList,this);
         recyclerView.setAdapter(adapter);
         Toast.makeText(ImportActivity.this, getString(R.string.import_tutorial), Toast.LENGTH_LONG).show();
@@ -84,7 +95,7 @@ public class ImportActivity extends AppCompatActivity {
                     String number = cursor.getString(cursor.getColumnIndex
                             (ContactsContract.CommonDataKinds.Phone.NUMBER));
                     People people = new People(name, null, number, null, null,
-                            0, 0, 0, null, -139);
+                            0, 0, 0, null);
                     sysConList.add(people);
                 }
             }

@@ -7,14 +7,27 @@ import com.pixel.mycontact.utils.HashUtil;
 import com.pixel.mycontact.utils.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.UUID;
+
+import io.realm.RealmModel;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
 /*
  *  people实体类，实现序列化
  *
  */
-public class People implements Serializable {
+@RealmClass
+public class People implements Serializable, RealmModel {
 
-    private int i;
+    //Realm 不支持自增主键 使用uuid和创建时间来代替
+    @PrimaryKey
+    private String uuid = UUID.randomUUID().toString();
+    private Date createdAt = new Date();
+    @Ignore
+    private Boolean selected;
     @Expose
     private String n;
     @Expose
@@ -35,24 +48,16 @@ public class People implements Serializable {
     private int d;
     @Expose
     private String no;
-
-
-    private Boolean selected;
+    @Ignore
     private String status;
+    @Ignore
     private String crc32;
+    @Ignore
     private String displayMsg;
+    @Ignore
     private int unreadMsg = 0;
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public People(String firstName, String lastName, String number1, String number2, String email,
-                  int birthYear, int birthMonth, int birthDay, String note, int id) {
+                  int birthYear, int birthMonth, int birthDay, String note) {
 
         String name;
         if (!TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName)) {
@@ -66,7 +71,6 @@ public class People implements Serializable {
             name = firstName;
         }
 
-        this.i = id;
         this.n = name;
         this.f = firstName;
         this.l = lastName;
@@ -79,9 +83,23 @@ public class People implements Serializable {
         this.d = birthDay;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
-    public int getId() {
-        return i;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public People() {
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {

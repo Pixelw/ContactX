@@ -3,12 +3,18 @@ package com.pixel.mycontact.beans;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.RealmModel;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
+
 /**
  * @author Carl Su
  * @date 2019/11/26
  */
-public class IMMessage {
+@RealmClass
+public class IMMessage implements RealmModel {
 
+    @PrimaryKey
     private int msgID;
     private String msgSource;
     private String msgDestination;

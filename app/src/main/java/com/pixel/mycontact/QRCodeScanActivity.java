@@ -2,7 +2,6 @@ package com.pixel.mycontact;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -14,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.zxing.Result;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.utils.PeopleUrl;
 import com.pixel.mycontact.utils.PermissionsUtils;
 import com.pixel.mycontact.utils.StyleUtils;
@@ -23,7 +22,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class QRCodeScanActivity extends AppCompatActivity {
     private ZXingScannerView scannerView;
-    private PeopleDB peopleDB;
+    private RealmTransactions realmTransactions;
+//    private PeopleDB peopleDB;
 
     private ZXingScannerView.ResultHandler resultHandler = new ZXingScannerView.ResultHandler() {
         @Override
@@ -62,10 +62,18 @@ public class QRCodeScanActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (peopleDB.insertContact(people) > 0) {
-                                Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                          realmTransactions.insertAContact(people, new RealmTransactions.Callback() {
+                              @Override
+                              public void onSuccess() {
+                                  Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
+                                  finish();
+                              }
+
+                              @Override
+                              public void onFailed(String reason) {
+                                  Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_SHORT).show();
+                              }
+                          });
                         }
                     })
                     .setNegativeButton(R.string.cancelDia, new DialogInterface.OnClickListener() {
@@ -100,7 +108,7 @@ public class QRCodeScanActivity extends AppCompatActivity {
                 finish();
             }
         });
-        peopleDB = new PeopleDB(QRCodeScanActivity.this);
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
         if (PermissionsUtils.hasOrRequestForCamera(this, 10)) {
             initScanner();
         }
@@ -159,6 +167,5 @@ public class QRCodeScanActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        peopleDB.closeDB();
     }
 }

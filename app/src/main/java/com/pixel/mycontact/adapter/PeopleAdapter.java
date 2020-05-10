@@ -99,6 +99,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
         return mPeopleList.size();
     }
 
+    public void refresh(List<People> peoples){
+        mPeopleList.clear();
+        mPeopleList.addAll(peoples);
+        notifyDataSetChanged();
+    }
+
 
     static class mViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;

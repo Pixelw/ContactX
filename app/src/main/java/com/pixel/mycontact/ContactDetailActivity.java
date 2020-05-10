@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -33,7 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.adapter.DetailAdapter;
 import com.pixel.mycontact.beans.DetailList;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.utils.PeopleUrl;
 import com.pixel.mycontact.utils.PermissionsUtils;
 import com.pixel.mycontact.utils.QRGenerator;
@@ -48,7 +49,8 @@ public class ContactDetailActivity extends AppCompatActivity {
     private People people;
     private CoordinatorLayout cdrLay;
     private SharedPreferences preferences;
-    private PeopleDB peopleDB;
+//    private PeopleDB peopleDB;
+    private RealmTransactions realmTransactions;
     private Activity activity;
 
     @Override
@@ -72,10 +74,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this/*,R.style.AlertDialogCustom*/);
                 builder.setTitle(R.string.scanthis)
                         .setView(imgQRCode)
-                        .setNegativeButton(R.string.done, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
+                        .setNegativeButton(R.string.done, (dialog, which) -> {
                         })
                         .show();
             }
@@ -90,6 +89,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_detail);
         activity = this;
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
         Toolbar toolbar = findViewById(R.id.toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         CollapsingToolbarLayout ctLayout = findViewById(R.id.toolbar_layout);
@@ -104,6 +104,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         //接收来自上个活动传入的序列化的people对象
 
         people = (People) intent.getSerializableExtra("people");
+        System.out.println(people.getUuid());
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
         StyleUtils.setStatusBarTransparent(getWindow(), toolbar);
@@ -126,112 +127,97 @@ public class ContactDetailActivity extends AppCompatActivity {
             }
         });
         //设置长按删除联系人，弹出确认对话框
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                peopleDB = new PeopleDB(ContactDetailActivity.this);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this);
-                builder.setTitle(R.string.deletecontact)
-                        .setMessage(getString(R.string.deleteQuestion) + "\n" + people.getName())
-                        .setPositiveButton(R.string.comfirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (peopleDB.deleteContact(people.getId()) > 0) {
-                                    peopleDB.closeDB();
+        fab.setOnLongClickListener(v -> {
+//                peopleDB = new PeopleDB(ContactDetailActivity.this);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this);
+            builder.setTitle(R.string.deletecontact)
+                    .setMessage(getString(R.string.deleteQuestion) + "\n" + people.getName())
+                    .setPositiveButton(R.string.comfirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            realmTransactions.deleteContact(people.getUuid(), new RealmTransactions.Callback() {
+                                @Override
+                                public void onSuccess() {
                                     finish();
                                 }
-                            }
-                        })
-                        .setNegativeButton(R.string.cancelDia, null);
-                builder.show();
-                return false;
-            }
+
+                                @Override
+                                public void onFailed(String reason) {
+                                    Toast.makeText(ContactXApplication.getAppContext(), R.string.failed,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton(R.string.cancelDia, null);
+            builder.show();
+            return false;
         });
-        if (people.getId() < 0) {
+        if (TextUtils.isEmpty(people.getUuid())) {
             fab.hide();
         }
         //设置返回键
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
         //拨打电话
         LinearLayout call = findViewById(R.id.ivCall);
-        call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //确认并申请打电话权限
-                if (PermissionsUtils.hasOrRequestForCall(activity, 1)) {
-                    callPeople();
-                }
+        call.setOnClickListener(v -> {
+            //确认并申请打电话权限
+            if (PermissionsUtils.hasOrRequestForCall(activity, 1)) {
+                callPeople();
             }
         });
         //发送电子邮件
         LinearLayout sendEmail = findViewById(R.id.sendEmail);
-        sendEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(people.getEmail())) {
-                    Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.settings, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(ContactDetailActivity.this,
-                                            AddUserActivity.class);
-                                    intent.putExtra("people", people);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }).show();
-                } else {
-                    try {
-                        Intent intent1 = new Intent(Intent.ACTION_SENDTO);
-                        intent1.setData(Uri.parse("mailto:" + people.getEmail()));
-                        intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
-                        startActivity(intent1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
+        sendEmail.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(people.getEmail())) {
+                Snackbar.make(cdrLay, R.string.no_email, Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.settings, v1 -> {
+                            Intent intent12 = new Intent(ContactDetailActivity.this,
+                                    AddUserActivity.class);
+                            intent12.putExtra("people", people);
+                            startActivity(intent12);
+                            finish();
+                        }).show();
+            } else {
+                try {
+                    Intent intent1 = new Intent(Intent.ACTION_SENDTO);
+                    intent1.setData(Uri.parse("mailto:" + people.getEmail()));
+                    intent1.putExtra(Intent.EXTRA_TEXT, "\nsent from " + R.string.app_name);
+                    startActivity(intent1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
-
             }
+
         });
         //发送短信
         LinearLayout sendSms = findViewById(R.id.sendSms);
-        sendSms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String[] item;
-                AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this);
-                if (TextUtils.isEmpty(people.getNumber2()) ||TextUtils.isEmpty( people.getNumber1())) {
-                    item = new String[]{people.getNumber()};
-                } else {
-                    item = new String[]{people.getNumber1(), people.getNumber2()};
-                }
-                builder.setTitle(R.string.picknumber)
-                        .setItems(item, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Intent intentSms = new Intent(Intent.ACTION_VIEW);
-                                    intentSms.setData(Uri.parse("smsto:"));
-                                    intentSms.putExtra("address", item[which]);
-                                    intentSms.setType("vnd.android-dir/mms-sms");
-                                    startActivity(intentSms);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.cancelDia, null)
-                        .show();
+        sendSms.setOnClickListener(v -> {
+            final String[] item;
+            AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailActivity.this);
+            if (TextUtils.isEmpty(people.getNumber2()) ||TextUtils.isEmpty( people.getNumber1())) {
+                item = new String[]{people.getNumber()};
+            } else {
+                item = new String[]{people.getNumber1(), people.getNumber2()};
             }
+            builder.setTitle(R.string.picknumber)
+                    .setItems(item, (dialog, which) -> {
+                        try {
+                            Intent intentSms = new Intent(Intent.ACTION_VIEW);
+                            intentSms.setData(Uri.parse("smsto:"));
+                            intentSms.putExtra("address", item[which]);
+                            intentSms.setType("vnd.android-dir/mms-sms");
+                            startActivity(intentSms);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Snackbar.make(cdrLay, getString(R.string.error_action), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancelDia, null)
+                    .show();
         });
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -304,8 +290,8 @@ public class ContactDetailActivity extends AppCompatActivity {
             DetailList note = new DetailList(getString(R.string.notes), R.drawable.ic_format_list_bulleted_black_24dp, people.getNote());
             details.add(note);
         }
-        if (people.getId() >= 0) {
-            DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp, Integer.toString(people.getId()));
+        if (TextUtils.isEmpty(people.getUuid())) {
+            DetailList id = new DetailList("ID", R.drawable.ic_code_black_24dp,people.getUuid());
             details.add(id);
         }
 

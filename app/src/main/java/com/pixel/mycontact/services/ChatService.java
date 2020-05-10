@@ -47,7 +47,9 @@ public class ChatService extends Service implements ClientListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        core.close();
+        if (core != null){
+            core.close();
+        }
     }
 
     @Override

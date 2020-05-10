@@ -13,7 +13,7 @@ public class PeopleDB {
 
     private SQLiteDatabase db;
 
-    public PeopleDB(Context context) {
+    public PeopleDB(Context context,Object disable) {
         SQLHelper dbHelper = new SQLHelper(context, "Contacts.db", null, 1);
         db = dbHelper.getWritableDatabase();
     }
@@ -85,7 +85,7 @@ public class PeopleDB {
                 note = cursor.getString(cursor.getColumnIndex("note"));
                 People people = new People(
                         firstName, lastName, number1, number2, email, birthYear,
-                        birthMonth, birthDay, note, id
+                        birthMonth, birthDay, note
                 );
                 peopleList.add(people);
             } while (cursor.moveToNext());
@@ -108,7 +108,7 @@ public class PeopleDB {
         values.put("birthDay", people.getBirthDay());
         values.put("note", people.getNote());
         long r;
-        r = db.update("Contacts", values, "id=?", new String[]{people.getId() + ""});
+        r = db.update("Contacts", values, "id=?", new String[]{people.getUuid() + ""});
         return r;
     }
 

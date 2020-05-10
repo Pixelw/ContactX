@@ -37,7 +37,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.pixel.mycontact.adapter.PeopleAdapter;
 import com.pixel.mycontact.beans.IMMessage;
 import com.pixel.mycontact.beans.People;
-import com.pixel.mycontact.daos.PeopleDB;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.net.ClientListener;
 import com.pixel.mycontact.services.ChatService;
 import com.pixel.mycontact.utils.HashUtil;
@@ -58,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
     protected List<People> list;
     protected PeopleAdapter adapter;
     private TextView noContact;
-
-    private PeopleDB peopleDB;
-
+    //    private PeopleDB peopleDB;
     private CoordinatorLayout cdntlayout;
     public static final int MESSAGE_ONLINE_USERS = 1;
     public static final int MESSAGE_NEW_MSG = 2;
@@ -73,6 +71,21 @@ public class MainActivity extends AppCompatActivity {
     private String myCrc32;
     private String me;
     private MainHandler mainHandler;
+    private RealmTransactions realmTransactions;
+    private RealmTransactions.Callback callback = new RealmTransactions.Callback() {
+        @Override
+        public void onSuccess() {
+            Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        @Override
+        public void onFailed(String reason) {
+            Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    };
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -129,10 +142,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //initView
         initView();
-        peopleDB = new PeopleDB(MainActivity.this);
+//        peopleDB = new PeopleDB(MainActivity.this);
+        //由peopledb类获取数据库联系人list，然后传入RecyclerView的适配器类
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
         list = new ArrayList<>();
         peopleMap = new HashMap<>();
-        adapter = new PeopleAdapter(list,this);
+        adapter = new PeopleAdapter(list, this);
         recyclerView.setAdapter(adapter);
         //URL启动的方式
         urlIntentResolve();
@@ -229,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.mainList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        //由peopledb类获取数据库联系人list，然后传入RecyclerView的适配器类
     }
 
     //给菜单设置点击事件
@@ -239,11 +253,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_me:
                 startActivity(new Intent(MainActivity.this, MeActivity.class));
                 break;
-            case R.id.menu_initdb:
-                if (peopleDB.checkdb()) {
-                    Snackbar.make(cdntlayout, "DB is ready", Snackbar.LENGTH_SHORT).show();
-                }
-                break;
+//            case R.id.menu_initdb:
+//                if (peopleDB.checkdb()) {
+//                    Snackbar.make(cdntlayout, "DB is ready", Snackbar.LENGTH_SHORT).show();
+//                }
+//                break;
             case R.id.menu_chat:
                 startActivity(new Intent(MainActivity.this, ChatActivity.class));
                 break;
@@ -287,17 +301,13 @@ public class MainActivity extends AppCompatActivity {
 
                     if (peopleFromUrl != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        final People finalPeopleFromUrl = peopleFromUrl;
                         builder.setTitle(R.string.foundcontact)
                                 .setMessage(getString(R.string.addthis) + "\n" + peopleFromUrl.getName())
                                 .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        peopleDB = new PeopleDB(MainActivity.this);
-                                        if (peopleDB.insertContact(finalPeopleFromUrl) > 0) {
-                                            Toast.makeText(getApplicationContext(), getString(R.string.contactsave), Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }
+//                                        peopleDB = new PeopleDB(MainActivity.this);
+                                        realmTransactions.insertAContact(peopleFromUrl, callback);
                                     }
                                 })
                                 .setNegativeButton(R.string.cancelDia, new DialogInterface.OnClickListener() {
@@ -316,17 +326,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refresh() {
+        list.clear();
+        list.addAll(realmTransactions.queryAll());
         //创建一个线程，处理动画和读取数据库的操作
         new Thread(new Runnable() {
             @Override
             public void run() {
-                list.clear();
-                list = peopleDB.queryAll(list);
+//                list = peopleDB.queryAll(list);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
                         adapter.notifyDataSetChanged();
+                        System.out.println(adapter.getItemCount());
                         if (list.size() == 0) {
                             noContact.setVisibility(View.VISIBLE);
                         } else {
