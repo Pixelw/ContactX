@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pixel.mycontact.ContactXApplication;
 import com.pixel.mycontact.R;
 import com.pixel.mycontact.beans.IMMessage;
 
@@ -20,9 +21,17 @@ import java.util.List;
 public class ClassicChatAdapter extends RecyclerView.Adapter<ClassicChatAdapter.mViewHolder> {
 
     private List<IMMessage> chatList;
+    private String opponent;
+    private String myCrc32;
+    private int colorGreen;
+    private int colorBlue;
 
-    public ClassicChatAdapter(List<IMMessage> chatList) {
+    public ClassicChatAdapter(List<IMMessage> chatList, String opponent, String myCrc32) {
         this.chatList = chatList;
+        this.opponent = opponent;
+        this.myCrc32 = myCrc32;
+        colorBlue = ContactXApplication.getAppContext().getResources().getColor(R.color.colorClassicBlue);
+        colorGreen = ContactXApplication.getAppContext().getResources().getColor(R.color.colorClassicGreen);
     }
 
     @NonNull
@@ -36,10 +45,15 @@ public class ClassicChatAdapter extends RecyclerView.Adapter<ClassicChatAdapter.
     @Override
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
         IMMessage imMessage = chatList.get(position);
+        if (imMessage.getMsgDestination().equals(myCrc32)) {
+            imMessage.setMsgUser(opponent);
+            holder.userName.setTextColor(colorBlue);
+        } else if (imMessage.getMsgSource().equals(myCrc32)) {
+            holder.userName.setTextColor(colorGreen);
+        }
         holder.userName.setText(imMessage.getMsgUser());
         holder.msgBody.setText(imMessage.getMsgBody());
         holder.time.setText(imMessage.getSimpleTime());
-
     }
 
     @Override
@@ -49,7 +63,6 @@ public class ClassicChatAdapter extends RecyclerView.Adapter<ClassicChatAdapter.
 
 
     //自定adapter操作
-
     /**
      * 添加消息条目
      *
@@ -70,7 +83,6 @@ public class ClassicChatAdapter extends RecyclerView.Adapter<ClassicChatAdapter.
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, chatList.size());
     }
-
 
     static class mViewHolder extends RecyclerView.ViewHolder {
         TextView userName;

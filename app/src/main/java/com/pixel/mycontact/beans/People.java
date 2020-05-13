@@ -7,7 +7,6 @@ import com.pixel.mycontact.utils.HashUtil;
 import com.pixel.mycontact.utils.StringUtils;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.UUID;
 
 import io.realm.RealmModel;
@@ -25,7 +24,7 @@ public class People implements Serializable, RealmModel {
     //Realm 不支持自增主键 使用uuid和创建时间来代替
     @PrimaryKey
     private String uuid = UUID.randomUUID().toString();
-    private Date createdAt = new Date();
+    private long createdAt = System.currentTimeMillis();
     @Ignore
     private Boolean selected;
     @Expose

@@ -20,11 +20,8 @@ import java.util.concurrent.Executors;
  */
 public class ClientSocketCore {
 
-
     public static final String CLOSE_TOKEN = "JBdKZ7g7sub8bP3";
-
     private ClientListener clientListener;
-
     private String serverIp;
     private int port;
     private String userID;

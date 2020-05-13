@@ -13,49 +13,17 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarChat"
+            style="@style/mToolbarTheme"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            style="@style/mToolbarTheme"
             app:navigationIcon="@drawable/ic_arrow_back_black_24dp" />
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_chat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/et_targetUser"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/name"
-            android:inputType="text" />
-
-        <TextView
-            android:id="@+id/tv_targetip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </LinearLayout>
+        android:layout_weight="1"/>
 
     <include
         layout="@layout/widget_message_inputbox"

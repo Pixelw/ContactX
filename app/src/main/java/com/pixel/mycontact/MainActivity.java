@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_NEW_MSG = 2;
     private Map<String, People> peopleMap;
     private ChatService.CommunicationBinder mBinder;
+
+
     private String targetIp;
     private Integer port;
     private boolean linkReady = false;
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         //URL启动的方式
         urlIntentResolve();
-//        startService(new Intent(this, ChatService.class));
+        startService(new Intent(this, ChatService.class));
         mainHandler = new MainHandler(this);
     }
 
@@ -162,8 +164,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         targetIp = preferences.getString("server_ip", getString(R.string.pixelw_design));
         port = Integer.valueOf(preferences.getString("server_port", "9832"));
-        me = preferences.getString("me_name", "");
-        String me_number = HashUtil.toCrc32(preferences.getString("me_number", "").getBytes());
+        String me_number = preferences.getString("me_number", "");
         if (TextUtils.isEmpty(me_number)) {
             Snackbar.make(cdntlayout, R.string.noinfo, Snackbar.LENGTH_SHORT)
                     .setAction(R.string.settings, new View.OnClickListener() {
@@ -179,6 +180,14 @@ public class MainActivity extends AppCompatActivity {
         refresh();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+        stopService(new Intent(getApplicationContext(), ChatService.class));
+    }
+
+
     private void refreshOnline() {
         List<String> crc32List = new ArrayList<>();
         for (People people : list) {
@@ -192,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(connection);
     }
 
     private void initView() {
@@ -258,9 +266,6 @@ public class MainActivity extends AppCompatActivity {
 //                    Snackbar.make(cdntlayout, "DB is ready", Snackbar.LENGTH_SHORT).show();
 //                }
 //                break;
-            case R.id.menu_chat:
-                startActivity(new Intent(MainActivity.this, ChatActivity.class));
-                break;
             case R.id.menu_import_contact:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -338,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         swipeRefreshLayout.setRefreshing(true);
                         adapter.notifyDataSetChanged();
-                        System.out.println(adapter.getItemCount());
                         if (list.size() == 0) {
                             noContact.setVisibility(View.VISIBLE);
                         } else {
@@ -346,7 +350,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-                if (linkReady) refreshOnline();
+                if (linkReady) {
+                    mBinder.sayHello();
+                    refreshOnline();
+                }
                 try {
                     Thread.sleep(1339);
                 } catch (InterruptedException e) {
@@ -389,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity ac = activity.get();
             switch (msg.what) {
                 case ClientListener.LINK_ESTABLISHED:
+                    ac.linkReady = true;
                     ac.refreshOnline();
                     break;
                 case MESSAGE_ONLINE_USERS:

@@ -14,51 +14,86 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.pixel.mycontact.ChatActivity;
+import com.pixel.mycontact.ContactXApplication;
 import com.pixel.mycontact.MainActivity;
 import com.pixel.mycontact.beans.IMMessage;
+import com.pixel.mycontact.daos.RealmTransactions;
 import com.pixel.mycontact.net.ClientListener;
 import com.pixel.mycontact.net.ClientSocketCore;
+import com.pixel.mycontact.utils.LogUtil;
 
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ChatService extends Service implements ClientListener {
 
+    private static final String TAG = "ChatService";
     private ClientSocketCore core;
     private String userId;
     private Handler mainHandler;
     private Handler chatHandler;
+    private RealmTransactions realmTransactions;
     private Gson gson = new Gson();
 
     private Map<String, List<IMMessage>> sessionMap;
-
-    //clientlistener implementations
-    @Override
-    public void onOpen(ClientSocketCore core, Socket socket) {
-        core.sendTextMessage("Iam:" + userId);
-        mainHandler.sendEmptyMessage(LINK_ESTABLISHED);
-    }
-
+    private List<IMMessage> imMessageAll;
     private CommunicationBinder mBinder = new CommunicationBinder();
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (core != null){
-            core.close();
+    public void onCreate() {
+        super.onCreate();
+        sessionMap = new HashMap<>();
+        realmTransactions = new RealmTransactions(ContactXApplication.getRealmInstance());
+        imMessageAll = realmTransactions.loadMessages();
+
+    }
+
+    private void sessionRestorer(String myCrc32) {
+        for (IMMessage imMessage : imMessageAll) {
+            //判断session
+            String id = imMessage.getMsgSource().equals(myCrc32) ?
+                    imMessage.getMsgDestination() : imMessage.getMsgSource();
+            List<IMMessage> imMessageList1 = sessionMap.get(id);
+            if (imMessageList1 == null) {
+                imMessageList1 = new ArrayList<>();
+                imMessageList1.add(imMessage);
+                sessionMap.put(id, imMessageList1);
+            } else {
+                imMessageList1.add(imMessage);
+            }
         }
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtil.d(TAG, "onDestroy triggered");
+        if (core != null) {
+            core.close();
+        }
+        for (List<IMMessage> imMessageList : sessionMap.values()) {
+            realmTransactions.saveMessages(imMessageList);
+        }
+    }
+
+    //clientlistener implementations
+    @Override
+    public void onOpen(ClientSocketCore core, Socket socket) {
+        mBinder.sayHello();
+        mainHandler.sendEmptyMessage(LINK_ESTABLISHED);
+    }
+
+    @Override
     public void onMessage(ClientSocketCore core, Socket socket, String msg) {
+        LogUtil.v(TAG, "receive:" + msg);
         handleIncomingJson(msg);
     }
 
     private void handleIncomingJson(String msg) {
-        System.out.println("sss" + msg);
         JsonObject jsonObject;
         try {
             jsonObject = JsonParser.parseString(msg).getAsJsonObject();
@@ -85,19 +120,28 @@ public class ChatService extends Service implements ClientListener {
 
     private void handleIncomingMessage(IMMessage imMessage) {
         List<IMMessage> list = sessionMap.get(imMessage.getMsgSource());
+        int afterAdd;
         if (list != null) {
             list.add(imMessage);
+            afterAdd = list.indexOf(imMessage);
         } else {
             List<IMMessage> imMessageList = new ArrayList<>();
             imMessageList.add(imMessage);
+            afterAdd = imMessageList.indexOf(imMessage);
             sessionMap.put(imMessage.getMsgSource(), imMessageList);
         }
-        Message mainMessage = Message.obtain(mainHandler);
-        mainMessage.what = MainActivity.MESSAGE_NEW_MSG;
-        mainMessage.obj = imMessage;
-        mainHandler.sendMessage(mainMessage);
-
-        chatHandler.sendEmptyMessage(ChatActivity.UPDATE_MSG);
+        if (mainHandler != null) {
+            Message mainMessage = Message.obtain(mainHandler);
+            mainMessage.what = MainActivity.MESSAGE_NEW_MSG;
+            mainMessage.obj = imMessage;
+            mainHandler.sendMessage(mainMessage);
+        }
+        if (chatHandler != null) {
+            Message chatMessage = Message.obtain(chatHandler);
+            chatMessage.what = ChatActivity.NEW_MESSAGE;
+            chatMessage.arg2 = afterAdd;
+            chatHandler.sendMessage(chatMessage);
+        }
     }
 
     @Override
@@ -121,7 +165,11 @@ public class ChatService extends Service implements ClientListener {
             core.sendTextMessage(jsonObject.toString());
         }
 
-        public void sendUsersId(List<String> list){
+        public void sayHello() {
+            core.sendTextMessage("Iam:" + userId);
+        }
+
+        public void sendUsersId(List<String> list) {
             sendJsonMsg("usersCrc32", gson.toJsonTree(list));
         }
 
@@ -132,6 +180,16 @@ public class ChatService extends Service implements ClientListener {
             }
             userId = id;
             mainHandler = handler;
+            sessionRestorer(id);
+        }
+
+        public List<IMMessage> connectChat(String userId, Handler handler) {
+            chatHandler = handler;
+            if (sessionMap.get(userId) == null) {
+                List<IMMessage> list = new ArrayList<>();
+                sessionMap.put(userId, list);
+            }
+            return sessionMap.get(userId);
         }
     }
 

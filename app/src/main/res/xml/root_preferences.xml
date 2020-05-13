@@ -29,12 +29,6 @@
 
     <PreferenceCategory app:title="@string/chat_server">
         <EditTextPreference
-            app:defaultValue="Pixel"
-            app:key="nickname"
-            app:title="@string/nick_name"
-            app:useSimpleSummaryProvider="true" />
-
-        <EditTextPreference
             app:defaultValue="pixelw.design"
             app:key="server_ip"
             app:title="@string/chat_server_ip"

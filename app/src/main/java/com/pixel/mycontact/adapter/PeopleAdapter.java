@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pixel.mycontact.ChatActivity;
 import com.pixel.mycontact.ContactDetailActivity;
 import com.pixel.mycontact.R;
 import com.pixel.mycontact.beans.People;
@@ -40,20 +41,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
     @Override
     public mViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_inlist, viewGroup, false);
-        final mViewHolder holder = new mViewHolder(view);
-        //设置item的点击事件，获取当前item对应people对象，
-        holder.peopleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                People people = mPeopleList.get(position);
-                Intent intent = new Intent(v.getContext(), ContactDetailActivity.class);
-                intent.putExtra("people", people);
-                v.getContext().startActivity(intent);
-            }
-        });
 
-        return holder;
+        return new mViewHolder(view);
     }
 
     @Override
@@ -77,6 +66,25 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
                 //notifyDataSetChanged();
             }
         });
+        mViewHolder.peopleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mViewHolder.getAdapterPosition();
+                People people = mPeopleList.get(position);
+                Intent intent;
+                if (TextUtils.isEmpty(people.getDisplayMsg()) && TextUtils.isEmpty(people.getStatus())){
+                    intent = new Intent(v.getContext(), ContactDetailActivity.class);
+                    intent.putExtra("people", people);
+                }else {
+                    intent = new Intent(v.getContext(), ChatActivity.class);
+                    intent.putExtra("userId",people.getCrc32());
+                    intent.putExtra("userName",people.getName());
+                    intent.putExtra("people", people);
+                }
+                v.getContext().startActivity(intent);
+            }
+        });
+
         if (!TextUtils.isEmpty(people.getStatus())) {
             mViewHolder.llOnline.setVisibility(View.VISIBLE);
             mViewHolder.tvStatus.setText(people.getStatus());
@@ -88,9 +96,13 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.mViewHolde
         }
 
         if (people.getUnreadMsg() > 0){
-            mViewHolder.tvUnread.setText(people.getUnreadMsg());
+            mViewHolder.tvUnread.setText(String.valueOf(people.getUnreadMsg()));
         }else {
             mViewHolder.tvUnread.setText("");
+        }
+
+        if (!TextUtils.isEmpty(people.getDisplayMsg())){
+            mViewHolder.tvMsg.setText(people.getDisplayMsg());
         }
     }
 

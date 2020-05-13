@@ -15,7 +15,7 @@ public class LogUtil {
     public static final int NOTHING = 6;
 
     //set project logging level here
-    public static int level = DEBUG;
+    public static int level = VERBOSE;
 
 
     public static void v (String tag, String msg){

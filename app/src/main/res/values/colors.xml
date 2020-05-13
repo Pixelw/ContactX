@@ -25,4 +25,7 @@
     <!--    common-->
     <color name="colorCommonGray">#e0e0e0</color>
     <color name="colorCommonWhite">#ffffff</color>
+
+    <color name="colorClassicBlue">#2196F3</color>
+    <color name="colorClassicGreen">#4CAF50</color>
 </resources>

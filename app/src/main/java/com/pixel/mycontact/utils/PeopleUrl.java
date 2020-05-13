@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.util.Base64;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.pixel.mycontact.ContactXApplication;
 import com.pixel.mycontact.beans.People;
 
 public class PeopleUrl {
@@ -17,9 +17,7 @@ public class PeopleUrl {
     public static final String JSON_QUERY_PARA = "json=";
     public static final String B64_QUERY_PARA = "b64=";
 
-    private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd H:mm:ss")
-            .excludeFieldsWithoutExposeAnnotation()
-            .create();
+    private static Gson gson = ContactXApplication.getGsonInstance();
 
 
     public static People deserializePeopleObj(String json) {

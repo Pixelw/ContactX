@@ -104,7 +104,6 @@ public class ContactDetailActivity extends AppCompatActivity {
         //接收来自上个活动传入的序列化的people对象
 
         people = (People) intent.getSerializableExtra("people");
-        System.out.println(people.getUuid());
         toolbar.setTitle(people.getName());
         setSupportActionBar(toolbar);
         StyleUtils.setStatusBarTransparent(getWindow(), toolbar);

@@ -91,9 +91,14 @@ public class RealmTransactions {
     }
 
     public void saveMessages(List<IMMessage> imMessages) {
-        mRealm.executeTransactionAsync(realm -> realm.copyToRealm(imMessages),
+        mRealm.executeTransactionAsync(realm -> realm.copyToRealmOrUpdate(imMessages),
                 () -> LogUtil.d(TAG, "save msg ok"),
                 error -> LogUtil.e(TAG, "Save msg bad"));
+    }
+
+    public List<IMMessage> loadMessages(){
+        RealmResults<IMMessage> realmResults = mRealm.where(IMMessage.class).findAll();
+        return mRealm.copyFromRealm(realmResults);
     }
 
     public interface Callback {
